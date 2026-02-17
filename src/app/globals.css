@@ -144,6 +144,11 @@ body {
   gap: 0;
 }
 
+.workspace-empty .asset-rail,
+.workspace-empty .control-panel {
+  background: linear-gradient(180deg, rgba(16, 20, 31, 0.98), rgba(10, 13, 22, 0.98));
+}
+
 .asset-rail {
   width: 304px;
   flex-shrink: 0;
@@ -153,6 +158,10 @@ body {
   border-right: 1px solid var(--border-subtle);
   background: linear-gradient(180deg, rgba(18, 22, 34, 0.98), rgba(12, 15, 24, 0.98));
   backdrop-filter: blur(10px);
+}
+
+.asset-rail-empty {
+  border-right-color: #232a3e;
 }
 
 .asset-rail-head {
@@ -225,6 +234,34 @@ body {
   background: rgba(22, 27, 40, 0.86);
   color: var(--text-tertiary);
   padding: 14px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.asset-empty-guide {
+  margin: 0 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(27, 33, 49, 0.88), rgba(22, 27, 41, 0.92));
+  padding: 12px;
+}
+
+.asset-empty-guide-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #b0b8d6;
+  margin-bottom: 8px;
+}
+
+.asset-empty-guide-list {
+  margin: 0;
+  padding-left: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #8f9ab9;
   font-size: 11px;
   line-height: 1.4;
 }
@@ -606,12 +643,47 @@ body {
   margin-bottom: 12px;
 }
 
+.empty-stage-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(111, 120, 255, 0.45);
+  background: rgba(111, 120, 255, 0.15);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c4c9ff;
+  margin-bottom: 16px;
+}
+
 .empty-stage-subtitle {
   max-width: 640px;
   margin: 0 auto 22px;
   font-size: 20px;
   line-height: 1.5;
   color: #aeb6d1;
+}
+
+.empty-stage-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 auto 20px;
+  max-width: 580px;
+}
+
+.empty-stage-step {
+  border: 1px solid rgba(108, 122, 165, 0.45);
+  border-radius: 10px;
+  background: rgba(26, 32, 48, 0.72);
+  color: #b8c0dc;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  padding: 10px 8px;
 }
 
 .empty-stage-btn {
@@ -644,6 +716,12 @@ body {
   background: linear-gradient(180deg, #1a1f2e, #141927);
   padding: 22px 18px;
   text-align: center;
+}
+
+.inspector-empty-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .inspector-empty-icon {
@@ -686,6 +764,29 @@ body {
 
 .inspector-empty-btn:hover {
   background: rgba(111, 120, 255, 0.24);
+}
+
+.inspector-empty-checklist {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(25, 31, 47, 0.72);
+  padding: 12px;
+}
+
+.inspector-empty-checklist-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a7b0cd;
+  margin-bottom: 8px;
+}
+
+.inspector-empty-checklist-note {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #8f9bbc;
+  margin-top: 8px;
 }
 
 .hud-btn {
@@ -1150,6 +1251,12 @@ input[type="color"]::-webkit-color-swatch { border: none; }
 
   .empty-stage-subtitle {
     font-size: 16px;
+  }
+
+  .empty-stage-steps {
+    grid-template-columns: 1fr;
+    max-width: 280px;
+    margin-bottom: 16px;
   }
 }
 

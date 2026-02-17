@@ -1,6 +1,6 @@
 'use client';
 
-import { Screenshot, DEVICE_SIZES, IsometricPreset } from '@/types';
+import { BackgroundConfig, DeviceSize, Screenshot, TextConfig, DEVICE_SIZES } from '@/types';
 import { ISOMETRIC_PRESETS } from '@/lib/presets';
 
 // ═══════════════════════════════════════
@@ -146,7 +146,7 @@ function drawPlaceholder(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElemen
   }
 }
 
-function drawBackground(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, bg: any) {
+function drawBackground(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, bg: BackgroundConfig) {
   if (bg.type === 'solid') {
     ctx.fillStyle = bg.solid;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -159,7 +159,7 @@ function drawBackground(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement
     const x2 = canvas.width / 2 + Math.cos(rad) * diag / 2;
     const y2 = canvas.height / 2 + Math.sin(rad) * diag / 2;
     const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-    stops.forEach((stop: any) => {
+    stops.forEach((stop) => {
       gradient.addColorStop(Math.max(0, Math.min(1, stop.position / 100)), stop.color);
     });
     ctx.fillStyle = gradient;
@@ -198,9 +198,9 @@ function drawNoise(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, int
 
 async function drawPhoneIsometric(
   ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
+  _canvas: HTMLCanvasElement,
   screenshot: Screenshot,
-  device: any
+  device: DeviceSize
 ) {
   const config = screenshot.screenshot;
   const frame = {
@@ -385,9 +385,9 @@ async function drawPhoneIsometric(
 
 async function drawSimpleScreenshot(
   ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
+  _canvas: HTMLCanvasElement,
   screenshot: Screenshot,
-  device: any
+  device: DeviceSize
 ) {
   const config = screenshot.screenshot;
 
@@ -466,7 +466,7 @@ async function drawSimpleScreenshot(
 // ─── Text Rendering ───
 // ═══════════════════════════════════════
 
-function drawText(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, text: any, device: any) {
+function drawText(ctx: CanvasRenderingContext2D, _canvas: HTMLCanvasElement, text: TextConfig, device: DeviceSize) {
   ctx.textAlign = 'center';
 
   if (text.headlineEnabled && text.headline) {

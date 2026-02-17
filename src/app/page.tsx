@@ -344,9 +344,9 @@ export default function Home() {
       </header>
 
       {/* ─── MAIN BODY ─── */}
-      <div className="workspace flex-1 flex overflow-hidden">
+      <div className={`workspace flex-1 flex overflow-hidden ${screenshots.length === 0 ? 'workspace-empty' : ''}`}>
         {/* ─── LEFT: Assets + Scene Presets ─── */}
-        <aside className={`asset-rail ${viewMode === 'preview' ? 'hidden' : ''}`}>
+        <aside className={`asset-rail ${viewMode === 'preview' ? 'hidden' : ''} ${screenshots.length === 0 ? 'asset-rail-empty' : ''}`}>
           <div className="asset-rail-head">
             <h2 className="asset-rail-title">Assets</h2>
             <span className="asset-rail-meta">{screenshots.length} {screenshots.length === 1 ? 'shot' : 'shots'}</span>
@@ -359,12 +359,16 @@ export default function Home() {
               </svg>
               Add Screenshots
             </button>
-            <p className="asset-upload-hint">Drag screenshots onto the canvas to import quickly.</p>
+            <p className="asset-upload-hint">
+              {screenshots.length === 0
+                ? 'Upload one screenshot to unlock devices, templates, text, and effects.'
+                : 'Drag screenshots onto the canvas to import quickly.'}
+            </p>
           </div>
 
           <div className="asset-list-wrap">
             {screenshots.length === 0 && (
-              <div className="asset-empty-state">No screenshots yet. Add one to start styling.</div>
+              <div className="asset-empty-state">No screenshots loaded yet. Add your first app screen to start styling.</div>
             )}
 
             {screenshots.length === 1 && (
@@ -385,6 +389,17 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {screenshots.length === 0 && (
+            <div className="asset-empty-guide">
+              <p className="asset-empty-guide-title">Quick Setup</p>
+              <ol className="asset-empty-guide-list">
+                <li>Upload a clean iPhone screenshot.</li>
+                <li>Pick device angle and background style.</li>
+                <li>Export in iPhone 16/17 App Store size.</li>
+              </ol>
+            </div>
+          )}
 
           {screenshots.length > 0 && (
             <div className="asset-actions">
@@ -415,8 +430,12 @@ export default function Home() {
             </div>
           )}
 
-          <div className="asset-rail-divider" />
-          <TemplateGallery />
+          {screenshots.length > 0 && (
+            <>
+              <div className="asset-rail-divider" />
+              <TemplateGallery />
+            </>
+          )}
         </aside>
 
         {/* ─── CENTER: Canvas ─── */}
@@ -447,10 +466,16 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="empty-stage-title">Create App Store Screenshots That Convert</h3>
+                <p className="empty-stage-kicker">ScreenForge Studio</p>
+                <h3 className="empty-stage-title">Build polished iPhone App Store screenshots</h3>
                 <p className="empty-stage-subtitle">
-                  Upload your app screenshots and style them for iPhone 16/17 listings in minutes.
+                  Upload your app screens and instantly style them for iPhone 16/17 dimensions with device framing, text overlays, and effects.
                 </p>
+                <div className="empty-stage-steps">
+                  <div className="empty-stage-step">1. Upload screenshot</div>
+                  <div className="empty-stage-step">2. Style in editor</div>
+                  <div className="empty-stage-step">3. Export App Store size</div>
+                </div>
                 <button
                   onClick={openUploader}
                   className="empty-stage-btn"
@@ -517,15 +542,33 @@ export default function Home() {
 
           <div className="inspector-scroll flex-1 overflow-y-auto p-4">
             {!currentScreenshot ? (
-              <div className="inspector-empty">
-                <div className="inspector-empty-icon">
-                  <svg className="w-7 h-7 text-[--text-tertiary]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                  </svg>
+              <div className="inspector-empty-shell">
+                <div className="inspector-empty">
+                  <div className="inspector-empty-icon">
+                    <svg className="w-7 h-7 text-[--text-tertiary]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                    </svg>
+                  </div>
+                  <p className="inspector-empty-title">Start by uploading a screenshot</p>
+                  <p className="inspector-empty-text">After upload, you can customize background, device frame, text, and effects here.</p>
+                  <button className="inspector-empty-btn" onClick={openUploader}>Upload Screenshot</button>
                 </div>
-                <p className="inspector-empty-title">Start by uploading a screenshot</p>
-                <p className="inspector-empty-text">After upload, you can customize background, device frame, text, and effects here.</p>
-                <button className="inspector-empty-btn" onClick={openUploader}>Upload Screenshot</button>
+
+                <div className="inspector-empty-checklist">
+                  <p className="inspector-empty-checklist-title">Project Target</p>
+                  <select
+                    className="sf-select w-full"
+                    value={outputDevice}
+                    onChange={(e) => setOutputDevice(e.target.value)}
+                  >
+                    {DEVICE_SIZES.map((device) => (
+                      <option key={device.id} value={device.id}>
+                        {device.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="inspector-empty-checklist-note">Choose your export size now so every screenshot is framed correctly.</p>
+                </div>
               </div>
             ) : (
               <>
