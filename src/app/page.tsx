@@ -110,6 +110,28 @@ function EffectsIcon() {
   );
 }
 
+// ─── Workflow Step ───
+function WorkflowStep({ index, label, state }: {
+  index: number;
+  label: string;
+  state: 'done' | 'active' | 'idle';
+}) {
+  return (
+    <div className={`workflow-step ${state}`}>
+      <div className="workflow-step-dot">
+        {state === 'done' ? (
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        ) : (
+          index
+        )}
+      </div>
+      <span className="workflow-step-label">{label}</span>
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════
 // ─── Main Page ───
 // ═══════════════════════════════════════
@@ -121,8 +143,10 @@ export default function Home() {
   const [canvasScale, setCanvasScale] = useState(0.55);
   const [previewZoom, setPreviewZoom] = useState(1);
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'background' | 'device' | 'text' | 'effects'>('background');
   const [viewMode, setViewMode] = useState<'editor' | 'preview'>('editor');
+  const [workspaceMode, setWorkspaceMode] = useState<'appstore' | 'marketing'>('appstore');
 
   const [isDraggingPosition, setIsDraggingPosition] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, screenshotX: 0, screenshotY: 0 });
@@ -145,12 +169,31 @@ export default function Home() {
     frameColor: config.deviceFrame?.frameColor || '#1a1a1a',
     enabled: config.deviceFrame?.enabled !== false,
   } : null;
+  const currentDevice = DEVICE_SIZES.find((device) => device.id === outputDevice) || DEVICE_SIZES[0];
+  const isMarketingMode = workspaceMode === 'marketing';
+  const workflowStep = screenshots.length === 0 ? 1 : viewMode === 'editor' ? 2 : 3;
+
+  const shotCountStatus = screenshots.length === 0 ? 'pending' : screenshots.length <= 10 ? 'pass' : 'warn';
+  const scaleStatus = !config ? 'pending' : config.scale >= 72 ? 'pass' : 'warn';
+  const tabsStatus = activeTab === 'effects' && workspaceMode === 'marketing' ? 'Creative mode' : workspaceMode === 'appstore' ? 'Compliance mode' : 'Marketing mode';
 
   useEffect(() => {
     if (!DEVICE_SIZES.some((device) => device.id === outputDevice)) {
       setOutputDevice(DEVICE_SIZES[0].id);
     }
   }, [outputDevice, setOutputDevice]);
+
+  useEffect(() => {
+    if (workspaceMode === 'appstore' && activeTab === 'effects') {
+      setActiveTab('background');
+    }
+  }, [workspaceMode, activeTab]);
+
+  useEffect(() => {
+    if (!exportError) return;
+    const timeout = window.setTimeout(() => setExportError(null), 5000);
+    return () => window.clearTimeout(timeout);
+  }, [exportError]);
 
   // Responsive canvas scaling
   useEffect(() => {
@@ -229,21 +272,29 @@ export default function Home() {
     setIsDraggingPosition(false);
   }, []);
 
+  const triggerDownload = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleExportSingle = async () => {
     if (!canvasRef.current || !currentScreenshot) return;
     const device = DEVICE_SIZES.find((d) => d.id === outputDevice) || DEVICE_SIZES[0];
     setExporting(true);
+    setExportError(null);
     try {
       const blob = await exportImage(canvasRef.current, currentScreenshot, outputDevice);
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `screenforge-${device.width}x${device.height}-${Date.now()}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      if (!blob) throw new Error('PNG generation returned empty data');
+      triggerDownload(blob, `screenforge-${device.width}x${device.height}-${Date.now()}.png`);
+    } catch (error) {
+      console.error('Export single failed', error);
+      setExportError('Export failed. Try again or refresh this page.');
     } finally { setExporting(false); }
   };
 
@@ -251,17 +302,14 @@ export default function Home() {
     if (screenshots.length === 0) return;
     const device = DEVICE_SIZES.find((d) => d.id === outputDevice) || DEVICE_SIZES[0];
     setExporting(true);
+    setExportError(null);
     try {
       const blob = await exportAllAsZip(screenshots, outputDevice);
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `screenforge-batch-${device.width}x${device.height}-${Date.now()}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      if (!blob) throw new Error('ZIP generation returned empty data');
+      triggerDownload(blob, `screenforge-batch-${device.width}x${device.height}-${Date.now()}.zip`);
+    } catch (error) {
+      console.error('Export batch failed', error);
+      setExportError('Batch export failed. Try again or export one screenshot.');
     } finally { setExporting(false); }
   };
 
@@ -286,6 +334,21 @@ export default function Home() {
         </div>
 
         <div className="header-center hidden md:flex">
+          <div className="workflow-mode-switch hidden xl:flex">
+            <button
+              className={`workflow-mode-btn ${workspaceMode === 'appstore' ? 'active' : ''}`}
+              onClick={() => setWorkspaceMode('appstore')}
+            >
+              App Store Ready
+            </button>
+            <button
+              className={`workflow-mode-btn ${workspaceMode === 'marketing' ? 'active' : ''}`}
+              onClick={() => setWorkspaceMode('marketing')}
+            >
+              Marketing Studio
+            </button>
+          </div>
+
           <div className="device-select-wrap hidden lg:flex">
             <select
               className="device-select"
@@ -343,6 +406,28 @@ export default function Home() {
         </div>
       </header>
 
+      <div className="workflow-bar">
+        <div className="workflow-steps">
+          <WorkflowStep index={1} label="Upload" state={workflowStep > 1 ? 'done' : 'active'} />
+          <div className="workflow-step-link" />
+          <WorkflowStep index={2} label="Style" state={workflowStep > 2 ? 'done' : workflowStep === 2 ? 'active' : 'idle'} />
+          <div className="workflow-step-link" />
+          <WorkflowStep index={3} label="Export" state={workflowStep === 3 ? 'active' : 'idle'} />
+        </div>
+
+        <div className="workflow-bar-meta">
+          <span className="workflow-meta-chip">Target {currentDevice.width}×{currentDevice.height}</span>
+          <span className="workflow-meta-chip subtle">{tabsStatus}</span>
+        </div>
+      </div>
+
+      {exportError && (
+        <div className="export-error-banner">
+          <span>{exportError}</span>
+          <button onClick={() => setExportError(null)} className="export-error-dismiss">Dismiss</button>
+        </div>
+      )}
+
       {/* ─── MAIN BODY ─── */}
       <div className={`workspace flex-1 flex overflow-hidden ${screenshots.length === 0 ? 'workspace-empty' : ''}`}>
         {/* ─── LEFT: Assets + Scene Presets ─── */}
@@ -364,6 +449,9 @@ export default function Home() {
                 ? 'Upload one screenshot to unlock devices, templates, text, and effects.'
                 : 'Drag screenshots onto the canvas to import quickly.'}
             </p>
+            <div className={`asset-mode-chip ${workspaceMode === 'marketing' ? 'marketing' : ''}`}>
+              {workspaceMode === 'appstore' ? 'Compliance-first workflow' : 'Creative marketing workflow'}
+            </div>
           </div>
 
           <div className="asset-list-wrap">
@@ -401,6 +489,38 @@ export default function Home() {
             </div>
           )}
 
+          {workspaceMode === 'appstore' && (
+            <div className="compliance-card">
+              <p className="compliance-card-title">App Store Checklist</p>
+
+              <div className="compliance-item">
+                <span className="compliance-dot pass" />
+                <div>
+                  <p className="compliance-item-label">Resolution target</p>
+                  <p className="compliance-item-text">{currentDevice.width}×{currentDevice.height}</p>
+                </div>
+              </div>
+
+              <div className="compliance-item">
+                <span className={`compliance-dot ${shotCountStatus}`} />
+                <div>
+                  <p className="compliance-item-label">Screenshot count</p>
+                  <p className="compliance-item-text">{screenshots.length}/10 uploaded</p>
+                </div>
+              </div>
+
+              <div className="compliance-item">
+                <span className={`compliance-dot ${scaleStatus}`} />
+                <div>
+                  <p className="compliance-item-label">Canvas fit quality</p>
+                  <p className="compliance-item-text">
+                    {config ? `Scale ${config.scale}%` : 'Upload first screenshot'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {screenshots.length > 0 && (
             <div className="asset-actions">
               {screenshots.length > 1 && (
@@ -430,7 +550,7 @@ export default function Home() {
             </div>
           )}
 
-          {screenshots.length > 0 && (
+          {screenshots.length > 0 && workspaceMode === 'marketing' && (
             <>
               <div className="asset-rail-divider" />
               <TemplateGallery />
@@ -455,6 +575,12 @@ export default function Home() {
               <span className="hud-value">{Math.round(canvasScale * previewZoom * 100)}%</span>
               <button onClick={() => adjustPreviewZoom(0.05)} className="hud-btn" title="Zoom in">+</button>
               <button onClick={() => setPreviewZoom(1)} className="hud-btn" title="Fit">↺</button>
+            </div>
+          )}
+
+          {screenshots.length > 0 && (
+            <div className="canvas-mode-pill">
+              {workspaceMode === 'appstore' ? 'App Store Ready mode' : 'Marketing Studio mode'}
             </div>
           )}
 
@@ -502,6 +628,7 @@ export default function Home() {
                   onMouseUp={handleCanvasMouseUp}
                   onMouseLeave={handleCanvasMouseUp}
                 >
+                  {workspaceMode === 'appstore' && <div className="canvas-safe-zone" />}
                   <canvas ref={canvasRef} className="block" width={1320} height={2868} />
                 </div>
               </div>
@@ -537,7 +664,16 @@ export default function Home() {
             <TabButton active={activeTab === 'background'} icon={<BackgroundIcon />} label="Background" onClick={() => setActiveTab('background')} disabled={!currentScreenshot} />
             <TabButton active={activeTab === 'device'} icon={<DeviceIcon />} label="Device" onClick={() => setActiveTab('device')} disabled={!currentScreenshot} />
             <TabButton active={activeTab === 'text'} icon={<TextIcon />} label="Text" onClick={() => setActiveTab('text')} disabled={!currentScreenshot} />
-            <TabButton active={activeTab === 'effects'} icon={<EffectsIcon />} label="Effects" onClick={() => setActiveTab('effects')} disabled={!currentScreenshot} />
+            <TabButton
+              active={activeTab === 'effects'}
+              icon={<EffectsIcon />}
+              label="Effects"
+              onClick={() => setActiveTab('effects')}
+              disabled={!currentScreenshot || !isMarketingMode}
+            />
+          </div>
+          <div className="inspector-mode-banner">
+            <span>{workspaceMode === 'appstore' ? 'App Store Ready' : 'Marketing Studio'}</span>
           </div>
 
           <div className="inspector-scroll flex-1 overflow-y-auto p-4">
@@ -550,7 +686,11 @@ export default function Home() {
                     </svg>
                   </div>
                   <p className="inspector-empty-title">Start by uploading a screenshot</p>
-                  <p className="inspector-empty-text">After upload, you can customize background, device frame, text, and effects here.</p>
+                  <p className="inspector-empty-text">
+                    {workspaceMode === 'appstore'
+                      ? 'After upload, tune background, device frame, and text for App Store export.'
+                      : 'After upload, tune visuals with backgrounds, text, and creative effects.'}
+                  </p>
                   <button className="inspector-empty-btn" onClick={openUploader}>Upload Screenshot</button>
                 </div>
 
@@ -572,6 +712,21 @@ export default function Home() {
               </div>
             ) : (
               <>
+                <div className="inspector-status-card">
+                  <div className="inspector-status-item">
+                    <span className="inspector-status-label">Shot</span>
+                    <span className="inspector-status-value">{selectedIndex + 1}/{screenshots.length}</span>
+                  </div>
+                  <div className="inspector-status-item">
+                    <span className="inspector-status-label">Scale</span>
+                    <span className="inspector-status-value">{config?.scale ?? '--'}%</span>
+                  </div>
+                  <div className="inspector-status-item">
+                    <span className="inspector-status-label">Mode</span>
+                    <span className="inspector-status-value">{workspaceMode === 'appstore' ? 'Ready' : 'Creative'}</span>
+                  </div>
+                </div>
+
                 {/* ─── Background Tab ─── */}
                 {activeTab === 'background' && bg && (
                   <div className="inspector-stack">
