@@ -1,0 +1,707 @@
+[  397224ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  438433ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  558600ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  608221ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  617428ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  621128ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  621442ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  695380ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  695660ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  699220ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  700191ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  972838ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  974052ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  974117ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  975064ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  977891ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1538846ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1550429ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1555262ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1558946ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1563407ms] [ERROR] ./src/lib/presets.ts:393:9
+Parsing ecmascript source code failed
+  391 |       deviceFrame: { enabled: false, type: 'flat', showFrame: true, frameOpacity: 100 },
+  392 |     },
+> 393 |     text: {
+      |         ^
+  394 |       headlineEnabled: true, headline: 'Magical',
+  395 |       headlineFont: 'Space Grotesk', headlineSize: 82, headlineWeight: '700', headlineColor: '#ffffff',
+  396 |       headlinePosition: 'top', headlineOffsetY: 8, lineHeight: 120,
+
+Expected ',', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/presets.ts [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/presets.ts [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1625846ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-client] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1625847ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-ssr] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1632583ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-client] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1632583ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-ssr] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1637267ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-client] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1637268ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-ssr] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1641868ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-client] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1641869ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-ssr] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1646858ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-client] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1646859ms] [ERROR] ./src/components/TemplateGallery.tsx:5:1
+Export TEMPLATE_CATEGORIES doesn't exist in target module
+  3 | import { useState, useMemo } from 'react';
+  4 | import { useAppStore } from '@/stores/app-store';
+> 5 | import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/lib/presets';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { Template, TemplateCategory } from '@/types';
+  7 |
+  8 | // Template Card Component
+
+The export TEMPLATE_CATEGORIES was not found in module [project]/src/lib/presets.ts [app-ssr] (ecmascript).
+Did you mean to import TEMPLATES?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/TemplateGallery.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/TemplateGallery.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2472748ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=rMTfQTcttYYiwMGFeRYzd' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 2473750ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=rMTfQTcttYYiwMGFeRYzd' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 2474754ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=rMTfQTcttYYiwMGFeRYzd' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 2475758ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=rMTfQTcttYYiwMGFeRYzd' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 2476827ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=rMTfQTcttYYiwMGFeRYzd' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878

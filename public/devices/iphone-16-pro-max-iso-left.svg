@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" fill="none">
+  <!-- iPhone 16 Pro Max - Isometric Left View -->
+  <defs>
+    <linearGradient id="frameIso" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a3a3a"/>
+      <stop offset="50%" style="stop-color:#2a2a2a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+    <linearGradient id="sideGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a4a4a"/>
+      <stop offset="100%" style="stop-color:#2a2a2a"/>
+    </linearGradient>
+    <filter id="shadowIso" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="30" dy="40" stdDeviation="40" flood-color="black" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  
+  <!-- Drop Shadow -->
+  <ellipse cx="320" cy="720" rx="200" ry="40" fill="black" opacity="0.3" filter="blur(30px)"/>
+  
+  <!-- Right Side (Thickness) -->
+  <path d="M380 120 L420 100 L420 700 L380 720 Z" fill="url(#sideGradient)"/>
+  
+  <!-- Bottom Edge -->
+  <path d="M140 700 L380 720 L420 700 L180 680 Z" fill="#2a2a2a"/>
+  
+  <!-- Front Face Frame -->
+  <path d="M140 120 L380 120 L380 720 L140 700 Z" fill="url(#frameIso)" filter="url(#shadowIso)"/>
+  
+  <!-- Inner Bezel -->
+  <path d="M150 130 L370 130 L370 710 L150 692 Z" fill="#1a1a1a"/>
+  
+  <!-- Screen Area (with slight perspective) -->
+  <path d="M160 145 L360 145 L360 695 L160 678 Z" fill="#000"/>
+  
+  <!-- Dynamic Island (tilted) -->
+  <path d="M240 155 L300 155 L302 175 L242 175 Z" fill="#000"/>
+  
+  <!-- Screen Content Mask -->
+  <clipPath id="screenMaskIso">
+    <path d="M160 190 L360 190 L360 695 L160 678 Z"/>
+  </clipPath>
+  
+  <!-- Buttons on side -->
+  <rect x="382" y="200" width="12" height="30" fill="#3a3a3a"/>
+  <rect x="385" y="250" width="12" height="50" fill="#3a3a3a"/>
+  <rect x="385" y="320" width="12" height="50" fill="#3a3a3a"/>
+</svg>

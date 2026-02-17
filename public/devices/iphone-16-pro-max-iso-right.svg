@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" fill="none">
+  <!-- iPhone 16 Pro Max - Isometric Right View -->
+  <defs>
+    <linearGradient id="frameIsoRight" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a3a3a"/>
+      <stop offset="50%" style="stop-color:#2a2a2a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+    <linearGradient id="sideGradientRight" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a4a4a"/>
+      <stop offset="100%" style="stop-color:#2a2a2a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Drop Shadow -->
+  <ellipse cx="280" cy="720" rx="200" ry="40" fill="black" opacity="0.3" filter="blur(30px)"/>
+  
+  <!-- Left Side (Thickness) -->
+  <path d="M220 100 L180 120 L180 720 L220 700 Z" fill="url(#sideGradientRight)"/>
+  
+  <!-- Bottom Edge -->
+  <path d="M220 700 L460 680 L420 660 L180 680 Z" fill="#2a2a2a"/>
+  
+  <!-- Front Face Frame -->
+  <path d="M220 100 L460 120 L460 680 L220 700 Z" fill="url(#frameIsoRight)"/>
+  
+  <!-- Inner Bezel -->
+  <path d="M230 110 L450 128 L450 672 L230 690 Z" fill="#1a1a1a"/>
+  
+  <!-- Screen Area -->
+  <path d="M240 125 L440 140 L440 660 L240 675 Z" fill="#000"/>
+  
+  <!-- Dynamic Island -->
+  <path d="M300 135 L360 140 L362 160 L302 155 Z" fill="#000"/>
+  
+  <!-- Screen Content Mask -->
+  <clipPath id="screenMaskIsoRight">
+    <path d="M240 180 L440 192 L440 660 L240 675 Z"/>
+  </clipPath>
+  
+  <!-- Buttons -->
+  <rect x="168" y="200" width="12" height="30" fill="#3a3a3a"/>
+  <rect x="165" y="250" width="12" height="50" fill="#3a3a3a"/>
+  <rect x="165" y="320" width="12" height="50" fill="#3a3a3a"/>
+  <rect x="445" y="240" width="12" height="70" fill="#3a3a3a"/>
+</svg>

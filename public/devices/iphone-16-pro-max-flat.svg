@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 880" fill="none">
+  <!-- iPhone 16 Pro Max - Simple Flat (optimized for screenshot overlay) -->
+  <defs>
+    <linearGradient id="frameFlat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#333"/>
+      <stop offset="50%" style="stop-color:#222"/>
+      <stop offset="100%" style="stop-color:#111"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Frame -->
+  <rect x="10" y="10" width="420" height="860" rx="50" fill="url(#frameFlat)"/>
+  
+  <!-- Bezel -->
+  <rect x="18" y="18" width="404" height="844" rx="44" fill="#000"/>
+  
+  <!-- Screen Area - This is where screenshot goes -->
+  <rect x="28" y="28" width="384" height="824" rx="38" fill="transparent" id="screenArea"/>
+  
+  <!-- Dynamic Island -->
+  <rect x="155" y="38" width="130" height="38" rx="19" fill="#000"/>
+  
+  <!-- Action Button hint -->
+  <rect x="-2" y="180" width="6" height="40" rx="2" fill="#333"/>
+  
+  <!-- Volume Buttons -->
+  <rect x="-2" y="240" width="6" height="70" rx="2" fill="#333"/>
+  <rect x="-2" y="330" width="6" height="70" rx="2" fill="#333"/>
+  
+  <!-- Power Button -->
+  <rect x="436" y="260" width="6" height="90" rx="2" fill="#333"/>
+</svg>
