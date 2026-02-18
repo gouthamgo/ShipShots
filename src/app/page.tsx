@@ -828,16 +828,22 @@ export default function Home() {
               <>
                 <div className="inspector-status-card">
                   <div className="inspector-status-item">
-                    <span className="inspector-status-label">Shot</span>
-                    <span className="inspector-status-value">{selectedIndex + 1}/{screenshots.length}</span>
+                    <div>
+                      <span className="inspector-status-label">Shot</span>
+                      <span className="inspector-status-value">{selectedIndex + 1}/{screenshots.length}</span>
+                    </div>
                   </div>
                   <div className="inspector-status-item">
-                    <span className="inspector-status-label">Scale</span>
-                    <span className="inspector-status-value">{config?.scale ?? '--'}%</span>
+                    <div>
+                      <span className="inspector-status-label">Scale</span>
+                      <span className="inspector-status-value">{config?.scale ?? '--'}%</span>
+                    </div>
                   </div>
                   <div className="inspector-status-item">
-                    <span className="inspector-status-label">Frame</span>
-                    <span className="inspector-status-value">{frame?.enabled ? 'On' : 'Off'}</span>
+                    <div>
+                      <span className="inspector-status-label">Frame</span>
+                      <span className="inspector-status-value">{frame?.enabled ? 'On' : 'Off'}</span>
+                    </div>
                   </div>
                 </div>
 
