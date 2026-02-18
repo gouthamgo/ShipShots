@@ -34,7 +34,7 @@ body {
     radial-gradient(circle at 100% 0%, rgba(13, 96, 141, 0.14), transparent 35%),
     var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -457,6 +457,7 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #c7d0ec;
+  pointer-events: none;
 }
 
 .compliance-item {
@@ -578,8 +579,9 @@ body {
 }
 
 .asset-remove-btn:hover {
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.52);
+  color: #fca5a5;
 }
 
 .asset-fit-btn {
@@ -612,22 +614,6 @@ body {
   border-left-color: var(--border-subtle);
 }
 
-.inspector-mode-banner {
-  height: 34px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  background: rgba(18, 23, 36, 0.92);
-}
-
-.inspector-mode-banner span {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #9ea8c8;
-}
 
 .inspector-scroll {
   background:
@@ -891,23 +877,6 @@ body {
   box-shadow: 0 12px 24px -18px rgba(0, 0, 0, 0.8);
 }
 
-.canvas-mode-pill {
-  position: absolute;
-  top: 20px;
-  left: 18px;
-  height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(111, 120, 255, 0.4);
-  background: rgba(17, 23, 36, 0.85);
-  color: #aeb7d8;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  display: inline-flex;
-  align-items: center;
-  z-index: 24;
-}
 
 .canvas-safe-zone {
   pointer-events: none;
@@ -1284,49 +1253,6 @@ input[type="color"]::-webkit-color-swatch { border: none; }
   overflow: hidden;
 }
 
-.template-empty-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-}
-
-.template-empty-card {
-  width: 100%;
-  border: 1px dashed #3a4460;
-  border-radius: 14px;
-  background: rgba(25, 30, 45, 0.78);
-  padding: 20px 16px;
-  text-align: center;
-}
-
-.template-empty-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #1f2537;
-  color: #bcc4e4;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.template-empty-title {
-  color: #e6ebff;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.template-empty-copy {
-  color: #8f9bbc;
-  font-size: 11px;
-  line-height: 1.45;
-}
 
 /* Device Preset Grid */
 .device-preset-grid {
@@ -1628,4 +1554,102 @@ input[type="color"]::-webkit-color-swatch { border: none; }
   .workflow-bar {
     display: none;
   }
+}
+
+/* ═══════════════════════════════════════ */
+/* ─── Shot Thumbnail Strip ─── */
+/* ═══════════════════════════════════════ */
+
+.shot-thumb-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 2px;
+}
+
+.shot-thumb-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #1a2030;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.shot-thumb-card:hover {
+  border-color: var(--border-hover);
+  background: #212840;
+}
+
+.shot-thumb-card.active {
+  border-color: rgba(111, 120, 255, 0.7);
+  background: rgba(111, 120, 255, 0.15);
+}
+
+.shot-thumb-img-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 7px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #111827;
+  border: 1px solid var(--border-subtle);
+}
+
+.shot-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.shot-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e2535, #2a3248);
+}
+
+.shot-thumb-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.shot-thumb-card.active .shot-thumb-label {
+  color: #c4c9ff;
+}
+
+/* ═══════════════════════════════════════ */
+/* ─── Undo / Redo Buttons ─── */
+/* ═══════════════════════════════════════ */
+
+.undo-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: rgba(27, 33, 48, 0.9);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.undo-btn:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: rgba(40, 48, 70, 0.95);
+}
+
+.undo-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }

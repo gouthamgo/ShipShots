@@ -1,99 +1,29 @@
 'use client';
 
-import { useAppStore } from '@/stores/app-store';
+import { DEFAULT_EFFECTS } from '@/lib/presets';
+import { ColorRow, SliderRow, Toggle } from '@/components/ui/controls';
+import { selectCurrentScreenshot, useAppStore } from '@/stores/app-store';
 
-// Toggle Component
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <div className={`toggle-track ${checked ? 'active' : ''}`} onClick={() => onChange(!checked)}>
-      <div className="toggle-thumb" />
-    </div>
-  );
-}
-
-// Slider Row Component
-function SliderRow({ label, value, min, max, step, unit, onChange }: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  unit?: string;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div className="slider-row">
-      <div className="slider-row-head">
-        <span className="slider-label">{label}</span>
-        <span className="slider-value">
-          {value}{unit || ''}
-        </span>
-      </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step || 1}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-      />
-    </div>
-  );
-}
-
-// Color Picker Row
-function ColorRow({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-[11px] text-[--text-secondary] font-medium">{label}</span>
-      <div className="flex items-center gap-2">
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-8 h-8 rounded-lg cursor-pointer"
-        />
-        <span className="text-[10px] text-[--text-tertiary] font-mono">{value}</span>
-      </div>
-    </div>
-  );
-}
-
-// Default effects fallback
-const DEFAULT_EFFECTS = {
-  glow: { enabled: false, color: '#8b5cf6', intensity: 50, spread: 20 },
-  reflection: { enabled: false, opacity: 30, offset: 20, fade: 50 },
-  perspective: { rotateX: 0, rotateY: 0 },
-};
-
-// Glow Effect Section
 function GlowSection() {
-  const { screenshots, selectedIndex, updateGlow } = useAppStore();
-  const currentScreenshot = screenshots[selectedIndex];
-  const effects = currentScreenshot?.screenshot.effects || DEFAULT_EFFECTS;
-
-  if (!effects) return null;
+  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+  const updateGlow = useAppStore((state) => state.updateGlow);
+  const effects = currentScreenshot?.screenshot?.effects || DEFAULT_EFFECTS;
 
   return (
     <div className="space-y-4">
       <div className="inspector-card flex items-center justify-between">
         <div>
           <span className="text-xs text-[--text-primary] font-medium">Enable Glow</span>
-          <p className="text-[10px] text-[--text-tertiary] mt-0.5">Add a glowing effect around the screenshot</p>
+          <p className="text-[10px] text-[--text-tertiary] mt-0.5">
+            Add a glowing effect around the screenshot
+          </p>
         </div>
-        <Toggle
-          checked={effects.glow.enabled}
-          onChange={(v) => updateGlow({ enabled: v })}
-        />
+        <Toggle checked={effects.glow.enabled} onChange={(v) => updateGlow({ enabled: v })} />
       </div>
 
       {effects.glow.enabled && (
         <div className="space-y-4 animate-fade-in">
-          <ColorRow
-            label="Glow Color"
-            value={effects.glow.color}
-            onChange={(v) => updateGlow({ color: v })}
-          />
+          <ColorRow label="Glow Color" value={effects.glow.color} onChange={(v) => updateGlow({ color: v })} />
           <SliderRow
             label="Intensity"
             value={effects.glow.intensity}
@@ -116,13 +46,10 @@ function GlowSection() {
   );
 }
 
-// Reflection Effect Section
 function ReflectionSection() {
-  const { screenshots, selectedIndex, updateReflection } = useAppStore();
-  const currentScreenshot = screenshots[selectedIndex];
-  const effects = currentScreenshot?.screenshot.effects || DEFAULT_EFFECTS;
-
-  if (!effects) return null;
+  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+  const updateReflection = useAppStore((state) => state.updateReflection);
+  const effects = currentScreenshot?.screenshot?.effects || DEFAULT_EFFECTS;
 
   return (
     <div className="space-y-4">
@@ -151,7 +78,7 @@ function ReflectionSection() {
             label="Offset"
             value={effects.reflection.offset}
             min={0}
-            max={100}
+            max={200}
             unit="px"
             onChange={(v) => updateReflection({ offset: v })}
           />
@@ -169,20 +96,19 @@ function ReflectionSection() {
   );
 }
 
-// Perspective Effect Section
 function PerspectiveSection() {
-  const { screenshots, selectedIndex, updatePerspective } = useAppStore();
-  const currentScreenshot = screenshots[selectedIndex];
-  const effects = currentScreenshot?.screenshot.effects || DEFAULT_EFFECTS;
-
-  if (!effects) return null;
+  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+  const updatePerspective = useAppStore((state) => state.updatePerspective);
+  const effects = currentScreenshot?.screenshot?.effects || DEFAULT_EFFECTS;
 
   return (
     <div className="space-y-4">
       <div className="inspector-card">
         <span className="text-xs text-[--text-primary] font-medium">3D Perspective</span>
-        <p className="text-[10px] text-[--text-tertiary] mt-0.5 mb-4">Rotate the screenshot in 3D space</p>
-        
+        <p className="text-[10px] text-[--text-tertiary] mt-0.5 mb-4">
+          Rotate the screenshot in 3D space
+        </p>
+
         <div className="space-y-4">
           <SliderRow
             label="Rotate X"
@@ -203,12 +129,8 @@ function PerspectiveSection() {
         </div>
       </div>
 
-      {/* Quick presets */}
       <div className="grid grid-cols-3 gap-2">
-        <button
-          onClick={() => updatePerspective({ rotateX: 0, rotateY: 0 })}
-          className="effect-preset-btn"
-        >
+        <button onClick={() => updatePerspective({ rotateX: 0, rotateY: 0 })} className="effect-preset-btn">
           Flat
         </button>
         <button
@@ -228,10 +150,8 @@ function PerspectiveSection() {
   );
 }
 
-// Main Effects Panel Component
 export function EffectsPanel() {
-  const { screenshots, selectedIndex } = useAppStore();
-  const currentScreenshot = screenshots[selectedIndex];
+  const currentScreenshot = useAppStore(selectCurrentScreenshot);
 
   if (!currentScreenshot) {
     return (
@@ -249,27 +169,16 @@ export function EffectsPanel() {
 
   return (
     <div className="space-y-6">
-      {/* Glow Section */}
       <div>
-        <h4 className="effects-group-title">
-          Glow Effect
-        </h4>
+        <h4 className="effects-group-title">Glow Effect</h4>
         <GlowSection />
       </div>
-
-      {/* Reflection Section */}
       <div>
-        <h4 className="effects-group-title">
-          Reflection
-        </h4>
+        <h4 className="effects-group-title">Reflection</h4>
         <ReflectionSection />
       </div>
-
-      {/* Perspective Section */}
       <div>
-        <h4 className="effects-group-title">
-          3D Perspective
-        </h4>
+        <h4 className="effects-group-title">3D Perspective</h4>
         <PerspectiveSection />
       </div>
     </div>

@@ -1,8 +1,21 @@
 'use client';
 
-import { useAppStore } from '@/stores/app-store';
+import { useState } from 'react';
+import { selectCurrentScreenshot, useAppStore } from '@/stores/app-store';
 import { ISOMETRIC_PRESETS, TEMPLATES } from '@/lib/presets';
 import { IsometricPreset, Template } from '@/types';
+
+function SectionChevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="11" height="11" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+      style={{ color: 'var(--text-tertiary)', transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}
+    >
+      <path d="M19 9l-7 7-7-7" />
+    </svg>
+  );
+}
 
 // ─── Device Angle Preview Card ───
 function DevicePresetCard({
@@ -63,93 +76,94 @@ function TemplateQuickCard({
 
 // ─── Main Sidebar Component ───
 export function TemplateGallery() {
-  const { screenshots, selectedIndex, updateDeviceFrame, applyTemplate } = useAppStore();
-  const currentScreenshot = screenshots[selectedIndex];
+  const screenshotCount = useAppStore((state) => state.screenshots.length);
+  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+  const updateDeviceFrame = useAppStore((state) => state.updateDeviceFrame);
+  const applyTemplate = useAppStore((state) => state.applyTemplate);
   const currentPresetId = currentScreenshot?.screenshot?.deviceFrame?.presetId || 'front';
   const frameEnabled = currentScreenshot?.screenshot?.deviceFrame?.enabled !== false;
 
-  if (screenshots.length === 0) {
-    return (
-      <section className="template-sidebar">
-        <div className="px-4 py-3 border-b border-[--border]">
-          <h2 className="text-xs font-semibold text-[--text-primary] tracking-wide uppercase">Scene Presets</h2>
-          <p className="text-[10px] text-[--text-tertiary] mt-0.5">Upload a screenshot to unlock device angles and templates</p>
-        </div>
-
-        <div className="template-empty-wrap">
-          <div className="template-empty-card">
-            <div className="template-empty-icon">◇</div>
-            <p className="template-empty-title">No Active Screenshot</p>
-            <p className="template-empty-copy">Presets appear here after your first upload, so you can apply styles in one click.</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const [devicesOpen, setDevicesOpen] = useState(true);
+  const [templatesOpen, setTemplatesOpen] = useState(true);
 
   return (
     <section className="template-sidebar">
-      {/* Device Angles Section */}
-      <div className="px-4 py-3 border-b border-[--border]">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xs font-semibold text-[--text-primary] tracking-wide uppercase">
-              Devices
-            </h2>
-            <p className="text-[10px] text-[--text-tertiary] mt-0.5">3D angle presets</p>
-          </div>
-          {screenshots.length > 0 && (
-            <button
-              onClick={() => updateDeviceFrame({ enabled: !frameEnabled })}
-              className={`text-[10px] font-medium px-2.5 py-1 rounded-lg transition-all ${
-                frameEnabled
-                  ? 'bg-[--accent] text-white'
-                  : 'bg-[--bg-tertiary] text-[--text-tertiary] border border-[--border]'
-              }`}
-            >
-              {frameEnabled ? 'ON' : 'OFF'}
-            </button>
-          )}
+
+      {screenshotCount === 0 && (
+        <div className="mx-3 mt-2 px-3 py-2 rounded-lg border border-[--border] bg-[--bg-tertiary] text-[10px] text-[--text-tertiary] text-center">
+          Upload a screenshot to apply
         </div>
+      )}
+
+      {/* ── Devices section ── */}
+      <div className="border-b border-[--border-subtle]">
+        <button
+          className="w-full flex items-center justify-between px-4 py-2.5"
+          onClick={() => setDevicesOpen((o) => !o)}
+          aria-expanded={devicesOpen}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-[--text-tertiary]">Devices</span>
+            {screenshotCount > 0 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); updateDeviceFrame({ enabled: !frameEnabled }); }}
+                className={`text-[10px] font-medium px-2 py-0.5 rounded transition-all ${
+                  frameEnabled
+                    ? 'bg-[--accent] text-white'
+                    : 'bg-[--bg-tertiary] text-[--text-tertiary] border border-[--border]'
+                }`}
+              >
+                {frameEnabled ? 'ON' : 'OFF'}
+              </button>
+            )}
+          </div>
+          <SectionChevron open={devicesOpen} />
+        </button>
+
+        {devicesOpen && (
+          <div className={`device-preset-grid ${(!frameEnabled || screenshotCount === 0) ? 'opacity-40 pointer-events-none' : ''}`}>
+            {ISOMETRIC_PRESETS.map((preset) => (
+              <DevicePresetCard
+                key={preset.id}
+                preset={preset}
+                selected={currentPresetId === preset.id}
+                onClick={() => {
+                  if (screenshotCount > 0) {
+                    updateDeviceFrame({ enabled: true, presetId: preset.id });
+                  }
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Device Preset Grid */}
-      <div className={`device-preset-grid ${!frameEnabled ? 'opacity-40 pointer-events-none' : ''}`}>
-        {ISOMETRIC_PRESETS.map((preset) => (
-          <DevicePresetCard
-            key={preset.id}
-            preset={preset}
-            selected={currentPresetId === preset.id}
-            onClick={() => {
-              if (screenshots.length > 0) {
-                updateDeviceFrame({ enabled: true, presetId: preset.id });
-              }
-            }}
-          />
-        ))}
-      </div>
+      {/* ── Templates section ── */}
+      <div>
+        <button
+          className="w-full flex items-center justify-between px-4 py-2.5"
+          onClick={() => setTemplatesOpen((o) => !o)}
+          aria-expanded={templatesOpen}
+        >
+          <span className="text-[10px] font-bold tracking-widest uppercase text-[--text-tertiary]">Templates</span>
+          <SectionChevron open={templatesOpen} />
+        </button>
 
-      {/* Divider */}
-      <div className="mx-4 my-1 border-t border-[--border]" />
-
-      {/* Templates Section */}
-      <div className="px-4 py-2">
-        <h3 className="text-[10px] font-semibold text-[--text-tertiary] tracking-wide uppercase mb-2">
-          Templates
-        </h3>
-      </div>
-      <div className="template-quick-grid">
-        {TEMPLATES.map((template) => (
-          <TemplateQuickCard
-            key={template.id}
-            template={template}
-            onClick={() => {
-              if (screenshots.length > 0) {
-                applyTemplate(template);
-              }
-            }}
-          />
-        ))}
+        {templatesOpen && (
+          <div className={`template-quick-grid ${screenshotCount === 0 ? 'opacity-40 pointer-events-none' : ''}`}>
+            {TEMPLATES.map((template) => (
+              <TemplateQuickCard
+                key={template.id}
+                template={template}
+                onClick={() => {
+                  if (screenshotCount > 0) {
+                    applyTemplate(template);
+                  }
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
     </section>

@@ -1,59 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useAppStore } from '@/stores/app-store';
+import { useShallow } from 'zustand/react/shallow';
+import { selectCurrentScreenshot, useAppStore } from '@/stores/app-store';
 import { DEVICE_SIZES } from '@/types';
 import { GRADIENT_PRESETS, POSITION_PRESETS, FONT_OPTIONS, WEIGHT_OPTIONS, FRAME_COLORS } from '@/lib/presets';
 import { renderToCanvas, exportImage, exportAllAsZip } from '@/lib/canvas';
 import { TemplateGallery } from '@/components/TemplateGallery';
 import { EffectsPanel } from '@/components/EffectsPanel';
+import { Accordion, SliderRow, Toggle } from '@/components/ui/controls';
+import { getScreenshotImage, saveScreenshotImage } from '@/lib/storage/image-store';
 
-// ─── Toggle Component ───
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <div className={`toggle-track ${checked ? 'active' : ''}`} onClick={() => onChange(!checked)}>
-      <div className="toggle-thumb" />
-    </div>
-  );
-}
-
-// ─── Slider Row ───
-function SliderRow({ label, value, min, max, step, unit, onChange }: {
-  label: string; value: number; min: number; max: number; step?: number; unit?: string;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div className="slider-row">
-      <div className="slider-row-head">
-        <span className="slider-label">{label}</span>
-        <span className="slider-value">{value}{unit || ''}</span>
-      </div>
-      <input type="range" min={min} max={max} step={step || 1} value={value}
-        onChange={(e) => onChange(Number(e.target.value))} />
-    </div>
-  );
-}
-
-// ─── Accordion Section ───
-function Accordion({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="accordion-section">
-      <button onClick={() => setOpen(!open)} className="accordion-header">
-        <span className="section-label">{title}</span>
-        <svg className={`accordion-chevron ${open ? 'open' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      <div className={`accordion-body ${open ? 'open' : 'closed'}`}>
-        <div className="accordion-body-inner space-y-4">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
+const CANVAS_MAX_SCALE = 0.65;
+const ZOOM_MIN = 0.7;
+const ZOOM_MAX = 1.4;
+const CANVAS_PADDING = 80;
 
 // ─── Tab Button ───
 function TabButton({ active, icon, label, onClick, disabled = false }: {
@@ -146,21 +107,51 @@ export default function Home() {
   const [exportError, setExportError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'background' | 'device' | 'text' | 'effects'>('background');
   const [viewMode, setViewMode] = useState<'editor' | 'preview'>('editor');
-  const [workspaceMode, setWorkspaceMode] = useState<'appstore' | 'marketing'>('appstore');
+  const [checklistOpen, setChecklistOpen] = useState(false);
+  const [scenePresetsOpen, setScenePresetsOpen] = useState(false);
 
   const [isDraggingPosition, setIsDraggingPosition] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, screenshotX: 0, screenshotY: 0 });
+  const dragFrameRef = useRef<number | null>(null);
+  const dragPendingRef = useRef<{ x: number; y: number } | null>(null);
+  const syncedImageIdsRef = useRef<Set<string>>(new Set());
 
   const {
     screenshots, selectedIndex, outputDevice,
-    addScreenshot, removeScreenshot, selectScreenshot,
+    canUndo, canRedo,
+    addScreenshot, hydrateScreenshotImage, removeScreenshot, selectScreenshot,
     setOutputDevice,
     applyToAll,
     updateBackground, applyGradientPreset,
     updateScreenshot, updateShadow, updateBorder,
     applyPositionPreset, updateText, updateDeviceFrame,
-  } = useAppStore();
-  const currentScreenshot = screenshots[selectedIndex] || null;
+    pushHistory, undo, redo,
+  } = useAppStore(useShallow((state) => ({
+    screenshots: state.screenshots,
+    selectedIndex: state.selectedIndex,
+    outputDevice: state.outputDevice,
+    canUndo: state.canUndo,
+    canRedo: state.canRedo,
+    addScreenshot: state.addScreenshot,
+    hydrateScreenshotImage: state.hydrateScreenshotImage,
+    removeScreenshot: state.removeScreenshot,
+    selectScreenshot: state.selectScreenshot,
+    setOutputDevice: state.setOutputDevice,
+    applyToAll: state.applyToAll,
+    updateBackground: state.updateBackground,
+    applyGradientPreset: state.applyGradientPreset,
+    updateScreenshot: state.updateScreenshot,
+    updateShadow: state.updateShadow,
+    updateBorder: state.updateBorder,
+    applyPositionPreset: state.applyPositionPreset,
+    updateText: state.updateText,
+    updateDeviceFrame: state.updateDeviceFrame,
+    pushHistory: state.pushHistory,
+    undo: state.undo,
+    redo: state.redo,
+  })));
+  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+  const hasRenderableCurrentScreenshot = Boolean(currentScreenshot?.imageData);
   const bg = currentScreenshot?.background;
   const config = currentScreenshot?.screenshot;
   const text = currentScreenshot?.text;
@@ -170,12 +161,13 @@ export default function Home() {
     enabled: config.deviceFrame?.enabled !== false,
   } : null;
   const currentDevice = DEVICE_SIZES.find((device) => device.id === outputDevice) || DEVICE_SIZES[0];
-  const isMarketingMode = workspaceMode === 'marketing';
   const workflowStep = screenshots.length === 0 ? 1 : viewMode === 'editor' ? 2 : 3;
 
+  // Compliance checks
   const shotCountStatus = screenshots.length === 0 ? 'pending' : screenshots.length <= 10 ? 'pass' : 'warn';
+  const textOverlayStatus = !text ? 'pending' : (text.headlineEnabled || text.subheadlineEnabled) ? 'pass' : 'warn';
+  const deviceFrameStatus = !frame ? 'pending' : frame.enabled ? 'pass' : 'warn';
   const scaleStatus = !config ? 'pending' : config.scale >= 72 ? 'pass' : 'warn';
-  const tabsStatus = activeTab === 'effects' && workspaceMode === 'marketing' ? 'Creative mode' : workspaceMode === 'appstore' ? 'Compliance mode' : 'Marketing mode';
 
   useEffect(() => {
     if (!DEVICE_SIZES.some((device) => device.id === outputDevice)) {
@@ -184,10 +176,42 @@ export default function Home() {
   }, [outputDevice, setOutputDevice]);
 
   useEffect(() => {
-    if (workspaceMode === 'appstore' && activeTab === 'effects') {
-      setActiveTab('background');
-    }
-  }, [workspaceMode, activeTab]);
+    screenshots.forEach((shot) => {
+      if (!shot.imageData) return;
+      if (syncedImageIdsRef.current.has(shot.imageId)) return;
+      syncedImageIdsRef.current.add(shot.imageId);
+      void saveScreenshotImage(shot.imageId, shot.imageData);
+    });
+  }, [screenshots]);
+
+  useEffect(() => {
+    const missingImages = screenshots.filter(
+      (shot) => !shot.imageData && Boolean(shot.imageId)
+    );
+    if (!missingImages.length) return;
+
+    let cancelled = false;
+    void Promise.all(
+      missingImages.map(async (shot) => {
+        const imageData = await getScreenshotImage(shot.imageId);
+        if (!cancelled && imageData) {
+          hydrateScreenshotImage(shot.id, imageData);
+        }
+      })
+    );
+
+    return () => {
+      cancelled = true;
+    };
+  }, [screenshots, hydrateScreenshotImage]);
+
+  useEffect(() => {
+    return () => {
+      if (dragFrameRef.current !== null) {
+        cancelAnimationFrame(dragFrameRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!exportError) return;
@@ -195,18 +219,30 @@ export default function Home() {
     return () => window.clearTimeout(timeout);
   }, [exportError]);
 
+  // Keyboard shortcut for undo/redo
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) redo(); else undo();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [undo, redo]);
+
   // Responsive canvas scaling
   useEffect(() => {
     const container = canvasContainerRef.current;
     if (!container) return;
     const resize = () => {
       const device = DEVICE_SIZES.find(d => d.id === outputDevice) || DEVICE_SIZES[0];
-      const padding = 80;
+      const padding = CANVAS_PADDING;
       const maxW = container.clientWidth - padding;
       const maxH = container.clientHeight - padding;
       const scaleW = maxW / device.width;
       const scaleH = maxH / device.height;
-      setCanvasScale(Math.min(scaleW, scaleH, 0.65));
+      setCanvasScale(Math.min(scaleW, scaleH, CANVAS_MAX_SCALE));
     };
     resize();
     const observer = new ResizeObserver(resize);
@@ -225,7 +261,12 @@ export default function Home() {
     Array.from(files).forEach(file => {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
-        reader.onload = (ev) => addScreenshot(ev.target?.result as string);
+        reader.onload = (ev) => {
+          const result = ev.target?.result;
+          if (typeof result === 'string') {
+            addScreenshot(result);
+          }
+        };
         reader.readAsDataURL(file);
       }
     });
@@ -262,15 +303,34 @@ export default function Home() {
     const deltaY = y - dragStartRef.current.y;
     const newX = dragStartRef.current.screenshotX + (deltaX / device.width) * 100;
     const newY = dragStartRef.current.screenshotY + (deltaY / device.height) * 100;
-    updateScreenshot({
+    dragPendingRef.current = {
       x: Math.max(0, Math.min(100, newX)),
       y: Math.max(0, Math.min(100, newY))
+    };
+
+    if (dragFrameRef.current !== null) return;
+    dragFrameRef.current = requestAnimationFrame(() => {
+      dragFrameRef.current = null;
+      if (!dragPendingRef.current) return;
+      updateScreenshot(dragPendingRef.current);
+      dragPendingRef.current = null;
     });
   }, [isDraggingPosition, currentScreenshot, canvasScale, outputDevice, updateScreenshot]);
 
   const handleCanvasMouseUp = useCallback(() => {
+    if (isDraggingPosition && dragPendingRef.current) {
+      pushHistory();
+    }
     setIsDraggingPosition(false);
-  }, []);
+    if (dragFrameRef.current !== null) {
+      cancelAnimationFrame(dragFrameRef.current);
+      dragFrameRef.current = null;
+    }
+    if (dragPendingRef.current) {
+      updateScreenshot(dragPendingRef.current);
+      dragPendingRef.current = null;
+    }
+  }, [isDraggingPosition, pushHistory, updateScreenshot]);
 
   const triggerDownload = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
@@ -284,7 +344,7 @@ export default function Home() {
   };
 
   const handleExportSingle = async () => {
-    if (!canvasRef.current || !currentScreenshot) return;
+    if (!canvasRef.current || !currentScreenshot || !currentScreenshot.imageData) return;
     const device = DEVICE_SIZES.find((d) => d.id === outputDevice) || DEVICE_SIZES[0];
     setExporting(true);
     setExportError(null);
@@ -300,11 +360,17 @@ export default function Home() {
 
   const handleExportAll = async () => {
     if (screenshots.length === 0) return;
+    const renderableScreenshots = screenshots.filter((shot) => Boolean(shot.imageData));
+    if (renderableScreenshots.length !== screenshots.length) {
+      setExportError('Some screenshots are still loading from local storage. Try again in a moment.');
+      return;
+    }
+
     const device = DEVICE_SIZES.find((d) => d.id === outputDevice) || DEVICE_SIZES[0];
     setExporting(true);
     setExportError(null);
     try {
-      const blob = await exportAllAsZip(screenshots, outputDevice);
+      const blob = await exportAllAsZip(renderableScreenshots, outputDevice);
       if (!blob) throw new Error('ZIP generation returned empty data');
       triggerDownload(blob, `screenforge-batch-${device.width}x${device.height}-${Date.now()}.zip`);
     } catch (error) {
@@ -318,7 +384,7 @@ export default function Home() {
   };
 
   const adjustPreviewZoom = (delta: number) => {
-    setPreviewZoom((prev) => Math.max(0.7, Math.min(1.4, prev + delta)));
+    setPreviewZoom((prev) => Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, prev + delta)));
   };
 
   return (
@@ -334,21 +400,6 @@ export default function Home() {
         </div>
 
         <div className="header-center hidden md:flex">
-          <div className="workflow-mode-switch hidden xl:flex">
-            <button
-              className={`workflow-mode-btn ${workspaceMode === 'appstore' ? 'active' : ''}`}
-              onClick={() => setWorkspaceMode('appstore')}
-            >
-              App Store Ready
-            </button>
-            <button
-              className={`workflow-mode-btn ${workspaceMode === 'marketing' ? 'active' : ''}`}
-              onClick={() => setWorkspaceMode('marketing')}
-            >
-              Marketing Studio
-            </button>
-          </div>
-
           <div className="device-select-wrap hidden lg:flex">
             <select
               className="device-select"
@@ -379,7 +430,31 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Undo / Redo */}
+          <button
+            onClick={undo}
+            disabled={!canUndo}
+            className="undo-btn"
+            title="Undo (⌘Z)"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 7v6h6" />
+              <path d="M3 13C5.333 8.333 9 6 14 6c4 0 7 2 9 6" />
+            </svg>
+          </button>
+          <button
+            onClick={redo}
+            disabled={!canRedo}
+            className="undo-btn"
+            title="Redo (⌘⇧Z)"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 7v6h-6" />
+              <path d="M21 13C18.667 8.333 15 6 10 6c-4 0-7 2-9 6" />
+            </svg>
+          </button>
+
           {screenshots.length > 1 ? (
             <button
               onClick={handleExportAll}
@@ -394,7 +469,7 @@ export default function Home() {
           ) : (
             <button
               onClick={handleExportSingle}
-              disabled={!currentScreenshot || exporting}
+              disabled={!hasRenderableCurrentScreenshot || exporting}
               className="btn-export-all header-export-btn disabled:opacity-50 disabled:pointer-events-none"
             >
               <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -417,7 +492,6 @@ export default function Home() {
 
         <div className="workflow-bar-meta">
           <span className="workflow-meta-chip">Target {currentDevice.width}×{currentDevice.height}</span>
-          <span className="workflow-meta-chip subtle">{tabsStatus}</span>
         </div>
       </div>
 
@@ -449,29 +523,25 @@ export default function Home() {
                 ? 'Upload one screenshot to unlock devices, templates, text, and effects.'
                 : 'Drag screenshots onto the canvas to import quickly.'}
             </p>
-            <div className={`asset-mode-chip ${workspaceMode === 'marketing' ? 'marketing' : ''}`}>
-              {workspaceMode === 'appstore' ? 'Compliance-first workflow' : 'Creative marketing workflow'}
-            </div>
           </div>
 
           <div className="asset-list-wrap">
-            {screenshots.length === 0 && (
+            {screenshots.length === 0 ? (
               <div className="asset-empty-state">No screenshots loaded yet. Add your first app screen to start styling.</div>
-            )}
-
-            {screenshots.length === 1 && (
-              <div className="asset-empty-state">Your screenshot is already on canvas. Add more only if you need multiple shots.</div>
-            )}
-
-            {screenshots.length > 1 && (
-              <div className="shot-switcher">
+            ) : (
+              <div className="shot-thumb-strip">
                 {screenshots.map((s, i) => (
                   <button
                     key={s.id}
                     onClick={() => selectScreenshot(i)}
-                    className={`shot-chip ${i === selectedIndex ? 'active' : ''}`}
+                    className={`shot-thumb-card ${i === selectedIndex ? 'active' : ''}`}
                   >
-                    Shot {i + 1}
+                    <div className="shot-thumb-img-wrap">
+                      {s.imageData
+                        ? <img src={s.imageData} alt={`Shot ${i + 1}`} className="shot-thumb-img" />
+                        : <div className="shot-thumb-placeholder" />}
+                    </div>
+                    <span className="shot-thumb-label">Shot {i + 1}</span>
                   </button>
                 ))}
               </div>
@@ -489,37 +559,84 @@ export default function Home() {
             </div>
           )}
 
-          {workspaceMode === 'appstore' && (
-            <div className="compliance-card">
-              <p className="compliance-card-title">App Store Checklist</p>
+          <div className="compliance-card">
+            <button
+              className="w-full flex items-center justify-between"
+              onClick={() => setChecklistOpen((o) => !o)}
+              aria-expanded={checklistOpen}
+            >
+              <span className="compliance-card-title">App Store Checklist</span>
+              <div className="flex items-center gap-2">
+                {!checklistOpen && (
+                  <div className="flex items-center gap-1.5">
+                    {(['pass', shotCountStatus, textOverlayStatus, deviceFrameStatus, scaleStatus] as const).map((s, i) => (
+                      <span key={i} className={`compliance-dot ${s}`} style={{ marginTop: 0 }} />
+                    ))}
+                    <span style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, marginLeft: 2 }}>
+                      {['pass', shotCountStatus, textOverlayStatus, deviceFrameStatus, scaleStatus].filter(s => s === 'pass').length}/5
+                    </span>
+                  </div>
+                )}
+                <svg
+                  width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ color: 'var(--text-tertiary)', transition: 'transform 0.2s', transform: checklistOpen ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}
+                >
+                  <path d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
 
-              <div className="compliance-item">
-                <span className="compliance-dot pass" />
-                <div>
-                  <p className="compliance-item-label">Resolution target</p>
-                  <p className="compliance-item-text">{currentDevice.width}×{currentDevice.height}</p>
+            {checklistOpen && (
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div className="compliance-item">
+                  <span className="compliance-dot pass" />
+                  <div>
+                    <p className="compliance-item-label">Resolution target</p>
+                    <p className="compliance-item-text">{currentDevice.width}×{currentDevice.height}</p>
+                  </div>
+                </div>
+
+                <div className="compliance-item">
+                  <span className={`compliance-dot ${shotCountStatus}`} />
+                  <div>
+                    <p className="compliance-item-label">Screenshot count</p>
+                    <p className="compliance-item-text">{screenshots.length}/10 uploaded</p>
+                  </div>
+                </div>
+
+                <div className="compliance-item">
+                  <span className={`compliance-dot ${textOverlayStatus}`} />
+                  <div>
+                    <p className="compliance-item-label">Text overlay</p>
+                    <p className="compliance-item-text">
+                      {!text ? 'Upload first screenshot' : (text.headlineEnabled || text.subheadlineEnabled) ? 'Enabled' : 'No text enabled'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="compliance-item">
+                  <span className={`compliance-dot ${deviceFrameStatus}`} />
+                  <div>
+                    <p className="compliance-item-label">Device frame</p>
+                    <p className="compliance-item-text">
+                      {!frame ? 'Upload first screenshot' : frame.enabled ? 'Frame on' : 'Frame off'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="compliance-item">
+                  <span className={`compliance-dot ${scaleStatus}`} />
+                  <div>
+                    <p className="compliance-item-label">Scale quality</p>
+                    <p className="compliance-item-text">
+                      {config ? `Scale ${config.scale}%` : 'Upload first screenshot'}
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              <div className="compliance-item">
-                <span className={`compliance-dot ${shotCountStatus}`} />
-                <div>
-                  <p className="compliance-item-label">Screenshot count</p>
-                  <p className="compliance-item-text">{screenshots.length}/10 uploaded</p>
-                </div>
-              </div>
-
-              <div className="compliance-item">
-                <span className={`compliance-dot ${scaleStatus}`} />
-                <div>
-                  <p className="compliance-item-label">Canvas fit quality</p>
-                  <p className="compliance-item-text">
-                    {config ? `Scale ${config.scale}%` : 'Upload first screenshot'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {screenshots.length > 0 && (
             <div className="asset-actions">
@@ -550,12 +667,22 @@ export default function Home() {
             </div>
           )}
 
-          {screenshots.length > 0 && workspaceMode === 'marketing' && (
-            <>
-              <div className="asset-rail-divider" />
-              <TemplateGallery />
-            </>
-          )}
+          <div className="asset-rail-divider" />
+          <button
+            className="w-full flex items-center justify-between px-3 py-2.5"
+            onClick={() => setScenePresetsOpen((o) => !o)}
+            aria-expanded={scenePresetsOpen}
+          >
+            <span className="text-[10px] font-bold tracking-widest uppercase text-[--text-tertiary]">Scene Presets</span>
+            <svg
+              width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ color: 'var(--text-tertiary)', transition: 'transform 0.2s', transform: scenePresetsOpen ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}
+            >
+              <path d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {scenePresetsOpen && <TemplateGallery />}
         </aside>
 
         {/* ─── CENTER: Canvas ─── */}
@@ -575,12 +702,6 @@ export default function Home() {
               <span className="hud-value">{Math.round(canvasScale * previewZoom * 100)}%</span>
               <button onClick={() => adjustPreviewZoom(0.05)} className="hud-btn" title="Zoom in">+</button>
               <button onClick={() => setPreviewZoom(1)} className="hud-btn" title="Fit">↺</button>
-            </div>
-          )}
-
-          {screenshots.length > 0 && (
-            <div className="canvas-mode-pill">
-              {workspaceMode === 'appstore' ? 'App Store Ready mode' : 'Marketing Studio mode'}
             </div>
           )}
 
@@ -628,8 +749,8 @@ export default function Home() {
                   onMouseUp={handleCanvasMouseUp}
                   onMouseLeave={handleCanvasMouseUp}
                 >
-                  {workspaceMode === 'appstore' && <div className="canvas-safe-zone" />}
-                  <canvas ref={canvasRef} className="block" width={1320} height={2868} />
+                  <div className="canvas-safe-zone" />
+                  <canvas ref={canvasRef} className="block" width={currentDevice.width} height={currentDevice.height} />
                 </div>
               </div>
             </div>
@@ -669,11 +790,8 @@ export default function Home() {
               icon={<EffectsIcon />}
               label="Effects"
               onClick={() => setActiveTab('effects')}
-              disabled={!currentScreenshot || !isMarketingMode}
+              disabled={!currentScreenshot}
             />
-          </div>
-          <div className="inspector-mode-banner">
-            <span>{workspaceMode === 'appstore' ? 'App Store Ready' : 'Marketing Studio'}</span>
           </div>
 
           <div className="inspector-scroll flex-1 overflow-y-auto p-4">
@@ -686,11 +804,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <p className="inspector-empty-title">Start by uploading a screenshot</p>
-                  <p className="inspector-empty-text">
-                    {workspaceMode === 'appstore'
-                      ? 'After upload, tune background, device frame, and text for App Store export.'
-                      : 'After upload, tune visuals with backgrounds, text, and creative effects.'}
-                  </p>
+                  <p className="inspector-empty-text">After upload, tune background, device frame, and text for App Store export.</p>
                   <button className="inspector-empty-btn" onClick={openUploader}>Upload Screenshot</button>
                 </div>
 
@@ -722,8 +836,8 @@ export default function Home() {
                     <span className="inspector-status-value">{config?.scale ?? '--'}%</span>
                   </div>
                   <div className="inspector-status-item">
-                    <span className="inspector-status-label">Mode</span>
-                    <span className="inspector-status-value">{workspaceMode === 'appstore' ? 'Ready' : 'Creative'}</span>
+                    <span className="inspector-status-label">Frame</span>
+                    <span className="inspector-status-value">{frame?.enabled ? 'On' : 'Off'}</span>
                   </div>
                 </div>
 
@@ -855,20 +969,26 @@ export default function Home() {
                     </Accordion>
 
                     <Accordion title="Size & Position">
-                      <SliderRow label="Scale" value={config.scale} min={20} max={120} unit="%"
-                        onChange={(v) => updateScreenshot({ scale: v })} />
-                      <div className="grid grid-cols-2 gap-4">
-                        <SliderRow label="X" value={config.x} min={0} max={100} unit="%"
-                          onChange={(v) => updateScreenshot({ x: v })} />
-                        <SliderRow label="Y" value={config.y} min={0} max={100} unit="%"
-                          onChange={(v) => updateScreenshot({ y: v })} />
+                      <div onMouseUp={() => pushHistory()}>
+                        <SliderRow label="Scale" value={config.scale} min={20} max={120} unit="%"
+                          onChange={(v) => updateScreenshot({ scale: v })} />
+                        <div className="grid grid-cols-2 gap-4 mt-4">
+                          <SliderRow label="X" value={config.x} min={0} max={100} unit="%"
+                            onChange={(v) => updateScreenshot({ x: v })} />
+                          <SliderRow label="Y" value={config.y} min={0} max={100} unit="%"
+                            onChange={(v) => updateScreenshot({ y: v })} />
+                        </div>
+                        {!frame.enabled && (
+                          <div className="mt-4">
+                            <SliderRow label="Corner Radius" value={config.cornerRadius} min={0} max={60} unit="px"
+                              onChange={(v) => updateScreenshot({ cornerRadius: v })} />
+                          </div>
+                        )}
+                        <div className="mt-4">
+                          <SliderRow label="Rotation" value={config.rotation} min={-45} max={45} unit="°"
+                            onChange={(v) => updateScreenshot({ rotation: v })} />
+                        </div>
                       </div>
-                      {!frame.enabled && (
-                        <SliderRow label="Corner Radius" value={config.cornerRadius} min={0} max={60} unit="px"
-                          onChange={(v) => updateScreenshot({ cornerRadius: v })} />
-                      )}
-                      <SliderRow label="Rotation" value={config.rotation} min={-45} max={45} unit="°"
-                        onChange={(v) => updateScreenshot({ rotation: v })} />
                     </Accordion>
 
                     <Accordion title="Shadow" defaultOpen={false}>
@@ -877,18 +997,20 @@ export default function Home() {
                         <Toggle checked={config.shadow.enabled} onChange={(v) => updateShadow({ enabled: v })} />
                       </div>
                       {config.shadow.enabled && (
-                        <>
+                        <div onMouseUp={() => pushHistory()}>
                           <SliderRow label="Blur" value={config.shadow.blur} min={0} max={150} unit="px"
                             onChange={(v) => updateShadow({ blur: v })} />
-                          <SliderRow label="Opacity" value={config.shadow.opacity} min={0} max={100} unit="%"
-                            onChange={(v) => updateShadow({ opacity: v })} />
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="mt-4">
+                            <SliderRow label="Opacity" value={config.shadow.opacity} min={0} max={100} unit="%"
+                              onChange={(v) => updateShadow({ opacity: v })} />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 mt-4">
                             <SliderRow label="Offset X" value={config.shadow.x} min={-60} max={60} unit="px"
                               onChange={(v) => updateShadow({ x: v })} />
                             <SliderRow label="Offset Y" value={config.shadow.y} min={-60} max={60} unit="px"
                               onChange={(v) => updateShadow({ y: v })} />
                           </div>
-                        </>
+                        </div>
                       )}
                     </Accordion>
 
@@ -899,12 +1021,14 @@ export default function Home() {
                           <Toggle checked={config.border.enabled} onChange={(v) => updateBorder({ enabled: v })} />
                         </div>
                         {config.border.enabled && (
-                          <>
+                          <div onMouseUp={() => pushHistory()}>
                             <SliderRow label="Width" value={config.border.width} min={0} max={30} unit="px"
                               onChange={(v) => updateBorder({ width: v })} />
-                            <SliderRow label="Opacity" value={config.border.opacity} min={0} max={100} unit="%"
-                              onChange={(v) => updateBorder({ opacity: v })} />
-                          </>
+                            <div className="mt-4">
+                              <SliderRow label="Opacity" value={config.border.opacity} min={0} max={100} unit="%"
+                                onChange={(v) => updateBorder({ opacity: v })} />
+                            </div>
+                          </div>
                         )}
                       </Accordion>
                     )}
@@ -923,6 +1047,7 @@ export default function Home() {
                         <div className="space-y-4 animate-fade-in">
                           <input type="text" value={text.headline}
                             onChange={(e) => updateText({ headline: e.target.value })}
+                            onBlur={() => pushHistory()}
                             placeholder="Enter headline..." className="sf-input" />
                           <div className="grid grid-cols-2 gap-3">
                             <div>
@@ -946,16 +1071,33 @@ export default function Home() {
                               </select>
                             </div>
                           </div>
-                          <SliderRow label="Size" value={text.headlineSize} min={24} max={160} unit="px"
-                            onChange={(v) => updateText({ headlineSize: v })} />
+                          <div onMouseUp={() => pushHistory()}>
+                            <SliderRow label="Size" value={text.headlineSize} min={24} max={160} unit="px"
+                              onChange={(v) => updateText({ headlineSize: v })} />
+                          </div>
                           <div>
                             <span className="text-[10px] text-[--text-tertiary] mb-1.5 block font-medium">Color</span>
                             <input type="color" value={text.headlineColor}
                               onChange={(e) => updateText({ headlineColor: e.target.value })}
                               className="color-input-wide" />
                           </div>
-                          <SliderRow label="Offset Y" value={text.headlineOffsetY} min={2} max={40} unit="%"
-                            onChange={(v) => updateText({ headlineOffsetY: v })} />
+                          <div>
+                            <span className="text-[10px] text-[--text-tertiary] mb-1.5 block font-medium">Position</span>
+                            <div className="inspector-segment">
+                              {(['top', 'bottom'] as const).map(pos => (
+                                <button key={pos} onClick={() => updateText({ headlinePosition: pos })}
+                                  className={`inspector-segment-btn ${text.headlinePosition === pos ? 'active' : ''} ${
+                                    text.headlinePosition === pos ? 'text-white' : 'text-[--text-secondary]'
+                                  }`}>
+                                  {pos}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          <div onMouseUp={() => pushHistory()}>
+                            <SliderRow label="Offset Y" value={text.headlineOffsetY} min={2} max={40} unit="%"
+                              onChange={(v) => updateText({ headlineOffsetY: v })} />
+                          </div>
                         </div>
                       )}
                     </Accordion>
@@ -968,11 +1110,20 @@ export default function Home() {
                         <div className="space-y-4 animate-fade-in">
                           <input type="text" value={text.subheadline}
                             onChange={(e) => updateText({ subheadline: e.target.value })}
+                            onBlur={() => pushHistory()}
                             placeholder="Enter subheadline..." className="sf-input" />
-                          <SliderRow label="Size" value={text.subheadlineSize} min={16} max={100} unit="px"
-                            onChange={(v) => updateText({ subheadlineSize: v })} />
-                          <SliderRow label="Opacity" value={text.subheadlineOpacity} min={0} max={100} unit="%"
-                            onChange={(v) => updateText({ subheadlineOpacity: v })} />
+                          <div onMouseUp={() => pushHistory()}>
+                            <SliderRow label="Size" value={text.subheadlineSize} min={16} max={100} unit="px"
+                              onChange={(v) => updateText({ subheadlineSize: v })} />
+                            <div className="mt-4">
+                              <SliderRow label="Opacity" value={text.subheadlineOpacity} min={0} max={100} unit="%"
+                                onChange={(v) => updateText({ subheadlineOpacity: v })} />
+                            </div>
+                            <div className="mt-4">
+                              <SliderRow label="Offset Y" value={text.subheadlineOffsetY} min={-100} max={100} unit="px"
+                                onChange={(v) => updateText({ subheadlineOffsetY: v })} />
+                            </div>
+                          </div>
                         </div>
                       )}
                     </Accordion>
