@@ -95,7 +95,8 @@ export interface TextConfig {
 
 export interface Screenshot {
   id: string;
-  imageData: string;
+  imageId: string;
+  imageData?: string;
   background: BackgroundConfig;
   screenshot: ScreenshotConfig;
   text: TextConfig;

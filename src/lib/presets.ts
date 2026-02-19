@@ -217,19 +217,10 @@ export const DEFAULT_TEXT: TextConfig = {
 };
 
 export const FONT_OPTIONS = [
-  { value: 'Inter', label: 'Inter' },
-  { value: 'system', label: 'System Font' },
-  { value: 'Poppins', label: 'Poppins' },
-  { value: 'Roboto', label: 'Roboto' },
-  { value: 'Montserrat', label: 'Montserrat' },
-  { value: 'Open Sans', label: 'Open Sans' },
-  { value: 'Lato', label: 'Lato' },
-  { value: 'Raleway', label: 'Raleway' },
-  { value: 'Nunito', label: 'Nunito' },
-  { value: 'Playfair Display', label: 'Playfair Display' },
-  { value: 'Oswald', label: 'Oswald' },
   { value: 'DM Sans', label: 'DM Sans' },
+  { value: 'Inter', label: 'Inter' },
   { value: 'Space Grotesk', label: 'Space Grotesk' },
+  { value: 'system', label: 'System Font' },
 ];
 
 export const WEIGHT_OPTIONS = [
