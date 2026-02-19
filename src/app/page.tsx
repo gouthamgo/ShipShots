@@ -538,6 +538,7 @@ export default function Home() {
                   >
                     <div className="shot-thumb-img-wrap">
                       {s.imageData
+                        // eslint-disable-next-line @next/next/no-img-element
                         ? <img src={s.imageData} alt={`Shot ${i + 1}`} className="shot-thumb-img" />
                         : <div className="shot-thumb-placeholder" />}
                     </div>
