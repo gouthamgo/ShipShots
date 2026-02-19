@@ -105,16 +105,19 @@ export function TemplateGallery() {
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold tracking-widest uppercase text-[--text-tertiary]">Devices</span>
             {screenshotCount > 0 && (
-              <button
+              <span
+                role="button"
+                tabIndex={0}
                 onClick={(e) => { e.stopPropagation(); updateDeviceFrame({ enabled: !frameEnabled }); }}
-                className={`text-[10px] font-medium px-2 py-0.5 rounded transition-all ${
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); updateDeviceFrame({ enabled: !frameEnabled }); } }}
+                className={`text-[10px] font-medium px-2 py-0.5 rounded transition-all cursor-pointer ${
                   frameEnabled
                     ? 'bg-[--accent] text-white'
                     : 'bg-[--bg-tertiary] text-[--text-tertiary] border border-[--border]'
                 }`}
               >
                 {frameEnabled ? 'ON' : 'OFF'}
-              </button>
+              </span>
             )}
           </div>
           <SectionChevron open={devicesOpen} />
