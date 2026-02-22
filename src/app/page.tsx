@@ -332,7 +332,7 @@ export default function Home() {
     }
   }, [isDraggingPosition, pushHistory, updateScreenshot]);
 
-  const triggerDownload = (blob: Blob, filename: string) => {
+  const triggerDownload = useCallback((blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -341,9 +341,9 @@ export default function Home() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
+  }, []);
 
-  const handleExportSingle = async () => {
+  const handleExportSingle = useCallback(async () => {
     if (!canvasRef.current || !currentScreenshot || !currentScreenshot.imageData) return;
     const device = DEVICE_SIZES.find((d) => d.id === outputDevice) || DEVICE_SIZES[0];
     setExporting(true);
@@ -356,9 +356,9 @@ export default function Home() {
       console.error('Export single failed', error);
       setExportError('Export failed. Try again or refresh this page.');
     } finally { setExporting(false); }
-  };
+  }, [canvasRef, currentScreenshot, outputDevice, triggerDownload]);
 
-  const handleExportAll = async () => {
+  const handleExportAll = useCallback(async () => {
     if (screenshots.length === 0) return;
     const renderableScreenshots = screenshots.filter((shot) => Boolean(shot.imageData));
     if (renderableScreenshots.length !== screenshots.length) {
@@ -377,15 +377,15 @@ export default function Home() {
       console.error('Export batch failed', error);
       setExportError('Batch export failed. Try again or export one screenshot.');
     } finally { setExporting(false); }
-  };
+  }, [screenshots, outputDevice, triggerDownload]);
 
-  const openUploader = () => {
+  const openUploader = useCallback(() => {
     fileInputRef.current?.click();
-  };
+  }, []);
 
-  const adjustPreviewZoom = (delta: number) => {
+  const adjustPreviewZoom = useCallback((delta: number) => {
     setPreviewZoom((prev) => Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, prev + delta)));
-  };
+  }, []);
 
   return (
     <div className="app-shell h-screen flex flex-col bg-[--bg-primary] text-[--text-primary] overflow-hidden">
