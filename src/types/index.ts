@@ -4,17 +4,12 @@ export interface GradientStop {
 }
 
 export interface BackgroundConfig {
-  type: 'solid' | 'gradient' | 'image';
+  type: 'solid' | 'gradient';
   solid: string;
   gradient: {
     angle: number;
     stops: GradientStop[];
   };
-  image: string | null;
-  imageFit: 'cover' | 'contain' | 'stretch';
-  imageBlur: number;
-  overlayColor: string;
-  overlayOpacity: number;
   noise: boolean;
   noiseIntensity: number;
 }

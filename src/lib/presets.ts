@@ -158,11 +158,6 @@ export const DEFAULT_BACKGROUND: BackgroundConfig = {
       { color: '#764ba2', position: 100 },
     ],
   },
-  image: null,
-  imageFit: 'cover',
-  imageBlur: 0,
-  overlayColor: '#000000',
-  overlayOpacity: 0,
   noise: false,
   noiseIntensity: 15,
 };
@@ -257,8 +252,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'solid', solid: '#ffffff',
       gradient: { angle: 135, stops: [{ color: '#fff', position: 0 }, { color: '#fff', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: false, noiseIntensity: 10,
     },
     screenshot: {
@@ -284,8 +277,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'solid', solid: '#0a0a0a',
       gradient: { angle: 135, stops: [{ color: '#000', position: 0 }, { color: '#000', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: true, noiseIntensity: 8,
     },
     screenshot: {
@@ -311,8 +302,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'gradient', solid: '#1a1a2e',
       gradient: { angle: 135, stops: [{ color: '#667eea', position: 0 }, { color: '#764ba2', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: true, noiseIntensity: 12,
     },
     screenshot: {
@@ -338,8 +327,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'gradient', solid: '#fce7f3',
       gradient: { angle: 180, stops: [{ color: '#fce7f3', position: 0 }, { color: '#ddd6fe', position: 50 }, { color: '#bfdbfe', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: false, noiseIntensity: 10,
     },
     screenshot: {
@@ -365,8 +352,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'gradient', solid: '#ec4899',
       gradient: { angle: 135, stops: [{ color: '#ec4899', position: 0 }, { color: '#8b5cf6', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: false, noiseIntensity: 10,
     },
     screenshot: {
@@ -392,8 +377,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'gradient', solid: '#0f2027',
       gradient: { angle: 180, stops: [{ color: '#0f2027', position: 0 }, { color: '#203a43', position: 50 }, { color: '#2c5364', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: true, noiseIntensity: 8,
     },
     screenshot: {
@@ -419,8 +402,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'gradient', solid: '#312e81',
       gradient: { angle: 135, stops: [{ color: '#312e81', position: 0 }, { color: '#4338ca', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: true, noiseIntensity: 10,
     },
     screenshot: {
@@ -446,8 +427,6 @@ export const TEMPLATES: Template[] = [
     background: {
       type: 'solid', solid: '#f8fafc',
       gradient: { angle: 135, stops: [{ color: '#f8fafc', position: 0 }, { color: '#f8fafc', position: 100 }] },
-      image: null, imageFit: 'cover', imageBlur: 0,
-      overlayColor: '#000000', overlayOpacity: 0,
       noise: false, noiseIntensity: 10,
     },
     screenshot: {
