@@ -92,7 +92,7 @@ export function migratePersistedState(persistedState: unknown) {
     return persistedState;
   }
 
-  const state = persistedState as Partial<AppState>;
+  const state = structuredClone(persistedState) as Partial<AppState>;
   if (Array.isArray(state.screenshots)) {
     state.screenshots = state.screenshots.map((shot) => {
       const nextShot = structuredClone(shot);
