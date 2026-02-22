@@ -816,18 +816,7 @@ export default function Home() {
 
                 <div className="inspector-empty-checklist">
                   <p className="inspector-empty-checklist-title">Project Target</p>
-                  <select
-                    className="sf-select w-full"
-                    value={outputDevice}
-                    onChange={(e) => setOutputDevice(e.target.value)}
-                  >
-                    {DEVICE_SIZES.map((device) => (
-                      <option key={device.id} value={device.id}>
-                        {device.name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="inspector-empty-checklist-note">Choose your export size now so every screenshot is framed correctly.</p>
+                  <p className="inspector-empty-checklist-note">Use the device selector in the header to set your export size.</p>
                 </div>
               </div>
             ) : (
