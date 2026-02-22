@@ -11,12 +11,6 @@ import {
   Template,
   TextConfig,
 } from '@/types';
-
-// ─── History ───
-type HistoryEntry = Pick<Screenshot, 'id' | 'background' | 'screenshot' | 'text'>[];
-const undoStack: HistoryEntry[] = [];
-const redoStack: HistoryEntry[] = [];
-const MAX_HISTORY = 50;
 import {
   DEFAULT_BACKGROUND,
   DEFAULT_EFFECTS,
@@ -27,6 +21,12 @@ import {
   deleteScreenshotImage,
   saveScreenshotImage,
 } from '@/lib/storage/image-store';
+
+// ─── History ───
+type HistoryEntry = Pick<Screenshot, 'id' | 'background' | 'screenshot' | 'text'>[];
+const undoStack: HistoryEntry[] = [];
+const redoStack: HistoryEntry[] = [];
+const MAX_HISTORY = 50;
 
 export interface AppStore extends AppState {
   canUndo: boolean;
