@@ -176,6 +176,11 @@ export default function Home() {
   }, [outputDevice, setOutputDevice]);
 
   useEffect(() => {
+    const activeIds = new Set(screenshots.map((s) => s.imageId));
+    // Remove stale IDs from tracking set so removed-then-re-added images are saved again
+    for (const id of syncedImageIdsRef.current) {
+      if (!activeIds.has(id)) syncedImageIdsRef.current.delete(id);
+    }
     screenshots.forEach((shot) => {
       if (!shot.imageData) return;
       if (syncedImageIdsRef.current.has(shot.imageId)) return;
