@@ -1,5 +1,3 @@
-'use client';
-
 import { drawBackground, drawNoise, drawPlaceholder } from '@/lib/rendering/background';
 import { drawDeviceLayer } from '@/lib/rendering/device';
 import { drawText } from '@/lib/rendering/text';
