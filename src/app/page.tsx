@@ -1151,7 +1151,7 @@ export default function Home() {
         accept="image/*"
         multiple
         className="hidden"
-        onChange={(e) => handleFileUpload(e.target.files)}
+        onChange={(e) => { handleFileUpload(e.target.files); e.target.value = ''; }}
       />
     </div>
   );
