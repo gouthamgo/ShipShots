@@ -4,10 +4,8 @@ import { DEFAULT_EFFECTS } from '@/lib/presets';
 import { ColorRow, SliderRow, Toggle } from '@/components/ui/controls';
 import { selectCurrentScreenshot, useAppStore } from '@/stores/app-store';
 
-function GlowSection() {
-  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+function GlowSection({ effects }: { effects: ReturnType<typeof selectCurrentScreenshot>['screenshot']['effects'] }) {
   const updateGlow = useAppStore((state) => state.updateGlow);
-  const effects = currentScreenshot?.screenshot?.effects || DEFAULT_EFFECTS;
 
   return (
     <div className="space-y-4">
@@ -46,10 +44,8 @@ function GlowSection() {
   );
 }
 
-function ReflectionSection() {
-  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+function ReflectionSection({ effects }: { effects: ReturnType<typeof selectCurrentScreenshot>['screenshot']['effects'] }) {
   const updateReflection = useAppStore((state) => state.updateReflection);
-  const effects = currentScreenshot?.screenshot?.effects || DEFAULT_EFFECTS;
 
   return (
     <div className="space-y-4">
@@ -96,10 +92,8 @@ function ReflectionSection() {
   );
 }
 
-function PerspectiveSection() {
-  const currentScreenshot = useAppStore(selectCurrentScreenshot);
+function PerspectiveSection({ effects }: { effects: ReturnType<typeof selectCurrentScreenshot>['screenshot']['effects'] }) {
   const updatePerspective = useAppStore((state) => state.updatePerspective);
-  const effects = currentScreenshot?.screenshot?.effects || DEFAULT_EFFECTS;
 
   return (
     <div className="space-y-4">
@@ -152,6 +146,7 @@ function PerspectiveSection() {
 
 export function EffectsPanel() {
   const currentScreenshot = useAppStore(selectCurrentScreenshot);
+  const effects = currentScreenshot?.screenshot?.effects ?? DEFAULT_EFFECTS;
 
   if (!currentScreenshot) {
     return (
@@ -171,15 +166,15 @@ export function EffectsPanel() {
     <div className="space-y-6">
       <div>
         <h4 className="effects-group-title">Glow Effect</h4>
-        <GlowSection />
+        <GlowSection effects={effects} />
       </div>
       <div>
         <h4 className="effects-group-title">Reflection</h4>
-        <ReflectionSection />
+        <ReflectionSection effects={effects} />
       </div>
       <div>
         <h4 className="effects-group-title">3D Perspective</h4>
-        <PerspectiveSection />
+        <PerspectiveSection effects={effects} />
       </div>
     </div>
   );
