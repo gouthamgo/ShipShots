@@ -54,8 +54,3 @@ build.log
 *.swp
 *.swo
 *~
-
-# public assets (screenshots, generated images)
-public/*.png
-public/*.jpg
-public/*.jpeg
