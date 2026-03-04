@@ -149,3 +149,31 @@ Zustand middleware can persist selected state to localStorage:
 - Output device preference
 - Recent edits (optional)
 - UI preferences (view mode, panel state)
+
+## Keyboard Shortcuts
+
+The app supports keyboard shortcuts for common actions:
+
+| Shortcut | Action |
+|----------|--------|
+| `⌘Z` | Undo last change |
+| `⌘⇧Z` | Redo undone change |
+
+Shortcuts are implemented via global event listeners in `page.tsx`.
+
+## Performance Considerations
+
+1. **Canvas Optimization** - Only re-render when relevant state changes
+2. **Image Lazy Loading** - Screenshots loaded on-demand from IndexedDB
+3. **Shallow Selectors** - Zustand `useShallow` prevents unnecessary re-renders
+4. **Debounced Updates** - Canvas position updates use requestAnimationFrame
+5. **Batch Processing** - ZIP export processes images in parallel
+
+## Future Improvements
+
+- [ ] Cloud storage integration
+- [ ] Template library
+- [ ] AI-powered text suggestions
+- [ ] Multi-device batch export
+- [ ] Collaborative editing
+
