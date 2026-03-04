@@ -92,3 +92,35 @@ Each device preset defines:
 - `width` and `height` in pixels
 - `scale` factor for rendering
 - `safeArea` margins for text positioning
+```
+
+## Component Flow
+
+```
+page.tsx (Main Page)
+├── AppHeader
+│   ├── DeviceSelector
+│   ├── ViewModeToggle (Editor/Preview)
+│   └── ExportButtons
+├── WorkflowBar
+│   └── WorkflowSteps (1. Upload → 2. Style → 3. Export)
+├── AssetRail
+│   ├── AssetUploader
+│   ├── AssetList
+│   └── AppStoreChecklist
+├── CanvasStage
+│   └── HTMLCanvasElement
+└── ControlPanel
+    ├── BackgroundPanel
+    ├── DevicePanel
+    ├── TextPanel
+    └── EffectsPanel
+```
+
+### Data Flow
+
+1. User uploads image → `addScreenshot()` action
+2. Screenshot stored in Zustand state
+3. Canvas re-renders via `useEffect` on state change
+4. User adjusts styles → `updateScreenshot()` action
+5. Export triggers canvas blob generation
