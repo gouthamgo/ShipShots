@@ -55,3 +55,40 @@ Key principles:
 - **Shallow equality**: Using `zustand/react/shallow` for optimized re-renders
 - **Persistence**: State can be persisted to localStorage/IndexedDB
 - **Immutability**: All updates create new objects to enable history
+```
+
+## Canvas Rendering
+
+The canvas rendering system is the core of ScreenForge. It handles:
+
+### Rendering Pipeline (`lib/canvas.ts`)
+
+1. **Background Layer** - Gradient or solid color fill
+2. **Device Frame Layer** - Isometric iPhone device overlay
+3. **Screenshot Layer** - User's app screenshot with positioning
+4. **Text Layer** - Headline and subtitle overlays
+5. **Effects Layer** - Glow, reflection, shadows
+
+### Export Functions
+
+```typescript
+// Single image export
+export async function exportImage(
+  canvas: HTMLCanvasElement,
+  screenshot: Screenshot,
+  deviceId: string
+): Promise<Blob>
+
+// Batch export as ZIP
+export async function exportAllAsZip(
+  screenshots: Screenshot[],
+  deviceId: string
+): Promise<Blob>
+```
+
+### Device Presets
+
+Each device preset defines:
+- `width` and `height` in pixels
+- `scale` factor for rendering
+- `safeArea` margins for text positioning
