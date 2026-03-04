@@ -124,3 +124,28 @@ page.tsx (Main Page)
 3. Canvas re-renders via `useEffect` on state change
 4. User adjusts styles → `updateScreenshot()` action
 5. Export triggers canvas blob generation
+
+## Storage
+
+### IndexedDB for Images
+
+Large image data is stored in IndexedDB to avoid localStorage limits:
+
+```typescript
+// lib/storage/image-store.ts
+export async function saveScreenshotImage(
+  id: string,
+  imageData: string
+): Promise<void>
+
+export async function getScreenshotImage(
+  id: string
+): Promise<string | null>
+```
+
+### State Persistence
+
+Zustand middleware can persist selected state to localStorage:
+- Output device preference
+- Recent edits (optional)
+- UI preferences (view mode, panel state)
