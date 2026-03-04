@@ -17,28 +17,41 @@ ScreenForge is a Next.js 16 application that enables users to create professiona
 ## Project Structure
 
 ```
-screenforge/
-├── src/
-│   ├── app/                 # Next.js App Router pages
-│   │   ├── layout.tsx       # Root layout with providers
-│   │   ├── page.tsx         # Main editor page
-│   │   └── globals.css      # Global styles + CSS variables
-│   ├── components/          # React components
-│   │   ├── AppHeader.tsx   # Top header with device selector
-│   │   ├── WorkflowBar.tsx  # Bottom workflow progress
-│   │   ├── AssetRail.tsx    # Left sidebar for screenshots
-│   │   ├── CanvasStage.tsx  # Main canvas editing area
-│   │   ├── ControlPanel.tsx # Right panel for style controls
-│   │   ├── EffectsPanel.tsx # Effects tab controls
-│   │   └── ui/              # Reusable UI components
-│   ├── stores/              # Zustand state stores
-│   │   └── app-store.ts     # Main application state
-│   ├── lib/                 # Utility functions
-│   │   ├── canvas.ts        # Canvas rendering logic
-│   │   └── storage/         # IndexedDB storage helpers
-│   └── types/               # TypeScript type definitions
-│       └── index.ts         # Shared types
-├── public/                  # Static assets
-│   └── screenshot.png       # README screenshot
 └── package.json
 ```
+
+## State Management
+
+The application uses Zustand for state management with the following stores:
+
+### App Store (`app-store.ts`)
+
+```typescript
+interface AppState {
+  // Screenshot data
+  screenshots: Screenshot[];
+  currentScreenshotId: string | null;
+  
+  // Output settings
+  outputDevice: string;
+  
+  // History for undo/redo
+  history: Screenshot[][];
+  historyIndex: number;
+  
+  // Actions
+  addScreenshot: (imageData: string) => void;
+  updateScreenshot: (id: string, updates: Partial<Screenshot>) => void;
+  deleteScreenshot: (id: string) => void;
+  setCurrentScreenshot: (id: string) => void;
+  setOutputDevice: (deviceId: string) => void;
+  pushHistory: () => void;
+  undo: () => void;
+  redo: () => void;
+}
+```
+
+Key principles:
+- **Shallow equality**: Using `zustand/react/shallow` for optimized re-renders
+- **Persistence**: State can be persisted to localStorage/IndexedDB
+- **Immutability**: All updates create new objects to enable history
