@@ -4,27 +4,91 @@
 
 ScreenForge is a Next.js 16 application that enables users to create professional iPhone App Store screenshots through an intuitive visual editor. The app uses HTML5 Canvas for rendering and exports images in Apple's required dimensions.
 
+---
+
 ## Tech Stack
 
-- **Frontend Framework**: Next.js 16 with App Router
-- **UI Library**: React 19
-- **Styling**: Tailwind CSS 4 + CSS Variables
-- **State Management**: Zustand with shallow equality
-- **Canvas Rendering**: Native HTML5 Canvas API
-- **Batch Export**: JSZip
-- **Build Tool**: Turbopack
+| Technology | Purpose |
+|------------|---------|
+| Next.js 16 | Frontend framework with App Router |
+| React 19 | UI library |
+| Tailwind CSS 4 | Styling with CSS variables |
+| Zustand | State management |
+| HTML5 Canvas | Image rendering |
+| JSZip | Batch export |
+| Turbopack | Build tool |
+
+---
 
 ## Project Structure
 
 ```
+screenforge/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx          # Root layout + providers
+│   │   ├── page.tsx            # Main editor (281 lines)
+│   │   └── globals.css         # Global styles + CSS vars
+│   ├── components/             # React components
+│   │   ├── AppHeader.tsx       # Top header bar
+│   │   ├── WorkflowBar.tsx     # Bottom progress bar
+│   │   ├── AssetRail.tsx       # Left sidebar
+│   │   ├── CanvasStage.tsx     # Center canvas
+│   │   ├── ControlPanel.tsx   # Right panel
+│   │   ├── EffectsPanel.tsx   # Effects controls
+│   │   ├── TemplateGallery.tsx # Template picker
+│   │   └── ui/                 # Reusable UI
+│   ├── stores/                 # Zustand stores
+│   │   └── app-store.ts        # Main state
+│   ├── lib/                    # Utilities
+│   │   ├── canvas.ts           # Rendering logic
+│   │   └── storage/            # IndexedDB helpers
+│   └── types/                  # TypeScript types
+│       └── index.ts            # Shared types
+├── public/                     # Static assets
 └── package.json
 ```
 
+---
+
+## Component Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        AppHeader                                │
+│  ┌─────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
+│  │    Brand    │  │  DeviceSelector  │  │  ExportButtons   │  │
+│  └─────────────┘  └──────────────────┘  └──────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       WorkflowBar                               │
+│  [ 1. Upload ] ──► [ 2. Style ] ──► [ 3. Export ]               │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+          ┌───────────────────┼───────────────────┐
+          ▼                   ▼                   ▼
+┌──────────────┐    ┌──────────────────┐    ┌──────────────┐
+│  AssetRail   │    │   CanvasStage    │    │ControlPanel │
+│              │    │                  │    │              │
+│ ┌──────────┐ │    │  ┌────────────┐  │    │ ┌──────────┐ │
+│ │Uploader  │ │    │  │  Canvas    │  │    │ │Background│ │
+│ └──────────┘ │    │  │  Element   │  │    │ └──────────┘ │
+│ ┌──────────┐ │    │  └────────────┘  │    │ ┌──────────┐ │
+│ │AssetList │ │    │                  │    │ │  Device  │ │
+│ └──────────┘ │    │                  │    │ └──────────┘ │
+│ ┌──────────┐ │    │                  │    │ ┌──────────┐ │
+│ │Checklist │ │    │                  │    │ │   Text   │ │
+│ └──────────┘ │    │                  │    │ └──────────┘ │
+└──────────────┘    └──────────────────┘    └──────────────┘
+```
+
+---
+
 ## State Management
 
-The application uses Zustand for state management with the following stores:
-
-### App Store (`app-store.ts`)
+### App Store Interface
 
 ```typescript
 interface AppState {
@@ -51,129 +115,197 @@ interface AppState {
 }
 ```
 
-Key principles:
-- **Shallow equality**: Using `zustand/react/shallow` for optimized re-renders
-- **Persistence**: State can be persisted to localStorage/IndexedDB
-- **Immutability**: All updates create new objects to enable history
+### Key Principles
+
+| Principle | Implementation |
+|-----------|----------------|
+| **Shallow Equality** | `zustand/react/shallow` for optimized re-renders |
+| **Persistence** | localStorage/IndexedDB for state hydration |
+| **Immutability** | All updates create new objects for history |
+
+---
+
+## Canvas Rendering Pipeline
+
 ```
-
-## Canvas Rendering
-
-The canvas rendering system is the core of ScreenForge. It handles:
-
-### Rendering Pipeline (`lib/canvas.ts`)
-
-1. **Background Layer** - Gradient or solid color fill
-2. **Device Frame Layer** - Isometric iPhone device overlay
-3. **Screenshot Layer** - User's app screenshot with positioning
-4. **Text Layer** - Headline and subtitle overlays
-5. **Effects Layer** - Glow, reflection, shadows
+┌────────────────────────────────────────────────────────────────┐
+│                     RENDERING PIPELINE                         │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐     │
+│  │  Background │───▶│Device Frame  │───▶│ Screenshot   │     │
+│  │   Layer     │    │    Layer     │    │    Layer     │     │
+│  │              │    │              │    │              │     │
+│  │ • Gradient  │    │ • Front view │    │ • Position   │     │
+│  │ • Solid     │    │ • Tilt       │    │ • Scale      │     │
+│  │ • Custom    │    │ • Isometric  │    │ • Crop       │     │
+│  └──────────────┘    └──────────────┘    └──────────────┘     │
+│                                                │               │
+│                                                ▼               │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐     │
+│  │   Effects    │◀───│    Text      │◀───│   Composite  │     │
+│  │   Layer      │    │    Layer     │    │    Output    │     │
+│  │              │    │              │    │              │     │
+│  │ • Glow       │    │ • Headline   │    │ • PNG Blob   │     │
+│  │ • Reflection │    │ • Subhead    │    │ • ZIP Archive│     │
+│  │ • Shadow     │    │ • Position   │    └──────────────┘     │
+│  └──────────────┘    └──────────────┘                          │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+```
 
 ### Export Functions
 
+| Function | Input | Output |
+|----------|-------|--------|
+| `exportImage` | Canvas + Screenshot + Device | `Promise<Blob>` |
+| `exportAllAsZip` | Screenshot[] + Device | `Promise<Blob>` |
+
+---
+
+## Device Presets
+
+| Device | Width | Height | Scale |
+|--------|-------|--------|-------|
+| iPhone 17 Pro Max | 1320 | 2868 | 1.0 |
+| iPhone 17 6.9" | 1290 | 2796 | 1.0 |
+| iPhone 17 6.9" | 1260 | 2736 | 1.0 |
+| iPhone 17 Pro | 1206 | 2622 | 1.0 |
+| iPhone 17 | 1179 | 2556 | 1.0 |
+
+Each preset includes:
+- `width`, `height` - Pixel dimensions
+- `scale` - Rendering scale factor
+- `safeArea` - Text positioning margins
+
+---
+
+## Data Flow
+
+```
+┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+│  Upload  │────▶│  Store   │────▶│ Canvas   │────▶│ Export   │
+│  Image   │     │  State   │     │ Re-render│     │  Blob    │
+└──────────┘     └──────────┘     └──────────┘     └──────────┘
+     │                │                │                │
+     ▼                ▼                ▼                ▼
+  FileReader    Zustand        useEffect       canvas.toBlob()
+                 update         trigger           JSZip.pack()
+```
+
+### Step-by-Step Flow
+
+1. **Upload** → User drops image → `FileReader` reads as dataURL
+2. **Store** → `addScreenshot()` → Updates Zustand state
+3. **Render** → `useEffect` detects change → Canvas redraws
+4. **Export** → `canvas.toBlob()` → JSZip bundles → Download
+
+---
+
+## Storage Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        STORAGE LAYERS                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ┌─────────────────────────────────────────────────────────┐  │
+│   │                    Zustand Store                         │  │
+│   │  • currentScreenshotId  • screenshots[]                  │  │
+│   │  • outputDevice         • history[]                      │  │
+│   └─────────────────────────────────────────────────────────┘  │
+│                              │                                  │
+│              ┌───────────────┼───────────────┐                 │
+│              ▼                               ▼                 │
+│   ┌─────────────────────┐         ┌─────────────────────┐      │
+│   │    localStorage    │         │     IndexedDB       │      │
+│   │                     │         │                     │      │
+│   │ • outputDevice     │         │ • Screenshot images │      │
+│   │ • UI preferences   │         │   (base64 strings) │      │
+│   │ • Recent edits     │         │                     │      │
+│   └─────────────────────┘         └─────────────────────┘      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### IndexedDB Schema
+
+| Table | Key | Value |
+|-------|-----|-------|
+| `screenshots` | `id` (string) | `{ imageData: string, timestamp: number }` |
+
+### API
+
 ```typescript
-// Single image export
-export async function exportImage(
-  canvas: HTMLCanvasElement,
-  screenshot: Screenshot,
-  deviceId: string
-): Promise<Blob>
+// Save image to IndexedDB
+saveScreenshotImage(id: string, imageData: string): Promise<void>
 
-// Batch export as ZIP
-export async function exportAllAsZip(
-  screenshots: Screenshot[],
-  deviceId: string
-): Promise<Blob>
+// Load image from IndexedDB
+getScreenshotImage(id: string): Promise<string | null>
 ```
 
-### Device Presets
-
-Each device preset defines:
-- `width` and `height` in pixels
-- `scale` factor for rendering
-- `safeArea` margins for text positioning
-```
-
-## Component Flow
-
-```
-page.tsx (Main Page)
-├── AppHeader
-│   ├── DeviceSelector
-│   ├── ViewModeToggle (Editor/Preview)
-│   └── ExportButtons
-├── WorkflowBar
-│   └── WorkflowSteps (1. Upload → 2. Style → 3. Export)
-├── AssetRail
-│   ├── AssetUploader
-│   ├── AssetList
-│   └── AppStoreChecklist
-├── CanvasStage
-│   └── HTMLCanvasElement
-└── ControlPanel
-    ├── BackgroundPanel
-    ├── DevicePanel
-    ├── TextPanel
-    └── EffectsPanel
-```
-
-### Data Flow
-
-1. User uploads image → `addScreenshot()` action
-2. Screenshot stored in Zustand state
-3. Canvas re-renders via `useEffect` on state change
-4. User adjusts styles → `updateScreenshot()` action
-5. Export triggers canvas blob generation
-
-## Storage
-
-### IndexedDB for Images
-
-Large image data is stored in IndexedDB to avoid localStorage limits:
-
-```typescript
-// lib/storage/image-store.ts
-export async function saveScreenshotImage(
-  id: string,
-  imageData: string
-): Promise<void>
-
-export async function getScreenshotImage(
-  id: string
-): Promise<string | null>
-```
-
-### State Persistence
-
-Zustand middleware can persist selected state to localStorage:
-- Output device preference
-- Recent edits (optional)
-- UI preferences (view mode, panel state)
+---
 
 ## Keyboard Shortcuts
 
-The app supports keyboard shortcuts for common actions:
+| Shortcut | Action | Component |
+|----------|--------|-----------|
+| `⌘Z` | Undo | `page.tsx` |
+| `⌘⇧Z` | Redo | `page.tsx` |
 
-| Shortcut | Action |
-|----------|--------|
-| `⌘Z` | Undo last change |
-| `⌘⇧Z` | Redo undone change |
+---
 
-Shortcuts are implemented via global event listeners in `page.tsx`.
+## Performance Optimization
 
-## Performance Considerations
+| Technique | Where | Benefit |
+|-----------|-------|---------|
+| **Shallow Selectors** | Zustand `useShallow` | Prevents unnecessary re-renders |
+| **RAF Batching** | Canvas drag handler | Smooth 60fps updates |
+| **Lazy Loading** | IndexedDB hydration | Fast initial load |
+| **Selective Effects** | `useEffect` dependencies | Only re-render on relevant changes |
+| **Parallel Export** | `Promise.all` in ZIP | Faster batch processing |
 
-1. **Canvas Optimization** - Only re-render when relevant state changes
-2. **Image Lazy Loading** - Screenshots loaded on-demand from IndexedDB
-3. **Shallow Selectors** - Zustand `useShallow` prevents unnecessary re-renders
-4. **Debounced Updates** - Canvas position updates use requestAnimationFrame
-5. **Batch Processing** - ZIP export processes images in parallel
+---
+
+## CSS Variables
+
+```css
+:root {
+  /* Colors */
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #141416;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #71717a;
+  --accent: #6366f1;
+  --border: #27272a;
+  
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+```
+
+---
 
 ## Future Improvements
 
-- [ ] Cloud storage integration
-- [ ] Template library
-- [ ] AI-powered text suggestions
-- [ ] Multi-device batch export
-- [ ] Collaborative editing
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| Cloud Storage | Medium | Save projects to cloud |
+| Template Library | High | Pre-made screenshot templates |
+| AI Text Suggestions | Low | Auto-generate headlines |
+| Multi-device Export | High | Export to all device sizes at once |
+| Collaborative Editing | Low | Real-time multiplayer |
 
+---
+
+## File Sizes
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| `page.tsx` | 281 | Main editor logic |
+| `app-store.ts` | ~150 | State management |
+| `canvas.ts` | ~200 | Rendering functions |
+| `ControlPanel.tsx` | ~150 | Style controls |
