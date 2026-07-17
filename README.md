@@ -1,8 +1,6 @@
-# ScreenForge
+# ShipShots
 
 A polished web app for creating professional iPhone App Store screenshots. Upload your app screens, style them with device frames, gradients, text overlays, and export in the exact dimensions required by Apple.
-
-![ScreenForge](public/screenshot.png)
 
 ## Features
 
@@ -31,7 +29,7 @@ A polished web app for creating professional iPhone App Store screenshots. Uploa
 ```bash
 # Clone the repository
 git clone https://github.com/gouthamgo/ShipShots.git
-cd screenforge
+cd ShipShots
 
 # Install dependencies
 npm install
@@ -76,7 +74,7 @@ The app features a modern, professional interface with:
 
 ## App Store Checklist
 
-ScreenForge includes a built-in compliance checklist to help ensure your screenshots meet Apple's requirements:
+ShipShots includes a built-in compliance checklist to help ensure your screenshots meet Apple's requirements:
 - Resolution and aspect ratio validation
 - File format verification (PNG required)
 - Screenshot count recommendations
